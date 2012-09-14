@@ -13,8 +13,8 @@ public class GeoCaching extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_geo_caching);
         showSplashScreen();
+        setContentView(R.layout.activity_geo_caching);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class GeoCaching extends Activity {
     }
     
     protected void showSplashScreen() {
-        mSplashDialog = new Dialog(this);
+        mSplashDialog = new Dialog(this, R.layout.splashscreen);
         mSplashDialog.setContentView(R.layout.splashscreen);
         mSplashDialog.setCancelable(false);
         mSplashDialog.show();

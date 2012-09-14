@@ -1,6 +1,6 @@
 These instructions assume Windows is being used
 
-Install git for windows, setup ssh keys and clone repository 'git clone git@bitbucket.org:<bitbucket_username>/mad_project.git'
+Install git for windows, setup ssh keys and clone repository 'git clone git@bitbucket.org:hedgehog89/mad_project.git'
 
 Install Eclipse IDE for Java EE Developers - http://www.eclipse.org/downloads/
 
@@ -30,4 +30,6 @@ Import the project into Eclipse
 	-In Eclipse File -> Import -> Maven -> Existing maven Projects
 	-Browse to the the GeoCaching folder in the Checked out source code.
 	-Import into Eclipse
+
+WARNING: When launching the application either for run or debug make sure the active file is a Java file and not XML or it will fail to launch
 	
