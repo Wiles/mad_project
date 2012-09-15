@@ -1,12 +1,14 @@
 package ca.setc.geocaching;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 
-public class GeoCaching extends Activity {
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+
+public class GeoCaching extends MapActivity {
 
 	protected Dialog mSplashDialog;
 	
@@ -15,6 +17,8 @@ public class GeoCaching extends Activity {
         super.onCreate(savedInstanceState);
         showSplashScreen();
         setContentView(R.layout.activity_geo_caching);
+        MapView mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setBuiltInZoomControls(true);
     }
 
     @Override
@@ -44,4 +48,10 @@ public class GeoCaching extends Activity {
           }
         }, 3000);
     }
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
