@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+import android.widget.EditText;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -21,15 +22,18 @@ public class GeoCaching extends MapActivity {
 	protected Dialog mSplashDialog;
 	protected MapController mc;
 	
+	private Location destination = new Location("");
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
-        
+        destination.setLatitude(0.0);
+        destination.setLongitude(0.0);
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();
+
         
         showSplashScreen();
         setContentView(R.layout.activity_geo_caching);
@@ -77,9 +81,24 @@ public class GeoCaching extends MapActivity {
 	private class LL implements LocationListener {
 
 		public void onLocationChanged(Location location) {
+
+			EditText destLat = (EditText) findViewById(R.id.destLat);
+			EditText destLong = (EditText) findViewById(R.id.destLong);
+			
+			destLat.setText("0.0");
+			destLong.setText("0.0");
+			
+			EditText curLat = (EditText) findViewById(R.id.currentLat);
+			EditText curLong = (EditText) findViewById(R.id.currentLong);
+
+			EditText distance = (EditText) findViewById(R.id.distance);
+			
+			curLat.setText(((Double)location.getLatitude()).toString());
+			curLong.setText(((Double)location.getLongitude()).toString());
+			
+			distance.setText(((Float)location.distanceTo(destination)).toString());
 			
 			mc.setCenter(new GeoPoint((int)(location.getLatitude() * 1e6), (int)(location.getLongitude() * 1e6)));
-			
 		}
 
 		public void onProviderDisabled(String provider) {
