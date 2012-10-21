@@ -13,6 +13,8 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class GeoCaching extends MapActivity {
 
@@ -22,6 +24,13 @@ public class GeoCaching extends MapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
+        
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+        
         showSplashScreen();
         setContentView(R.layout.activity_geo_caching);
         MapView mapView = (MapView) findViewById(R.id.mapview);
