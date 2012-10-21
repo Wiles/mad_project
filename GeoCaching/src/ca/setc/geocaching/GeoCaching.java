@@ -3,45 +3,53 @@ package ca.setc.geocaching;
 import android.app.Dialog;
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.widget.EditText;
+import ca.setc.geocaching.events.LocationChangedEvent;
+import ca.setc.geocaching.events.LocationChangedListener;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-public class GeoCaching extends MapActivity {
+public class GeoCaching extends MapActivity implements LocationChangedListener {
 
 	protected Dialog mSplashDialog;
 	protected MapController mc;
+	GPS gps = GPS.getInstance();
 	
-	private Location destination = new Location("");
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
+
+    	Location destination = new Location("");
         destination.setLatitude(0.0);
         destination.setLongitude(0.0);
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();
 
-        
         showSplashScreen();
         setContentView(R.layout.activity_geo_caching);
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mc = mapView.getController();
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, new LL());
+        gps.AddLocationChangedListener(this);
+        gps.setDestination(destination);
+        gps.setLocationManager(lm);
+
+		EditText destLat = (EditText)findViewById(R.id.destLat);
+		EditText destLng = (EditText)findViewById(R.id.destLong);
+		destLat.setText("0.0");
+		destLng.setText("0.0");
     }
 
     @Override
@@ -77,44 +85,18 @@ public class GeoCaching extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	private class LL implements LocationListener {
 
-		public void onLocationChanged(Location location) {
-
-			EditText destLat = (EditText) findViewById(R.id.destLat);
-			EditText destLong = (EditText) findViewById(R.id.destLong);
-			
-			destLat.setText("0.0");
-			destLong.setText("0.0");
-			
-			EditText curLat = (EditText) findViewById(R.id.currentLat);
-			EditText curLong = (EditText) findViewById(R.id.currentLong);
-
-			EditText distance = (EditText) findViewById(R.id.distance);
-			
-			curLat.setText(((Double)location.getLatitude()).toString());
-			curLong.setText(((Double)location.getLongitude()).toString());
-			
-			distance.setText(((Float)location.distanceTo(destination)).toString());
-			
-			mc.setCenter(new GeoPoint((int)(location.getLatitude() * 1e6), (int)(location.getLongitude() * 1e6)));
-		}
-
-		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
-		}
+	public void LocationChanged(LocationChangedEvent event) {
+		mc.setCenter(event.getGeoPoint());
 		
+		EditText curLat = (EditText)findViewById(R.id.currentLat);
+		EditText curLng = (EditText)findViewById(R.id.currentLong);
+		
+		curLat.setText(event.getLatitude().toString());
+		curLng.setText(event.getLongitude().toString());
+		
+		EditText distance = (EditText)findViewById(R.id.distance);
+		
+		distance.setText(gps.getDistance(event.getLocation()).toString());
 	}
 }
