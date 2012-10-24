@@ -9,7 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
-import android.widget.EditText;
+import android.widget.TextView;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 
@@ -48,8 +48,8 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
         gps.setDestination(destination);
         gps.setLocationManager(lm);
 
-		EditText destLat = (EditText)findViewById(R.id.destLat);
-		EditText destLng = (EditText)findViewById(R.id.destLong);
+        TextView destLat = (TextView)findViewById(R.id.destLat);
+        TextView destLng = (TextView)findViewById(R.id.destLong);
 		destLat.setText("0.0");
 		destLng.setText("0.0");
     }
@@ -91,13 +91,13 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
 	public void LocationChanged(LocationChangedEvent event) {
 		mc.setCenter(event.getGeoPoint());
 		
-		EditText curLat = (EditText)findViewById(R.id.currentLat);
-		EditText curLng = (EditText)findViewById(R.id.currentLong);
+		TextView curLat = (TextView)findViewById(R.id.currentLat);
+		TextView curLng = (TextView)findViewById(R.id.currentLong);
 		
 		curLat.setText(event.getLatitude().toString());
 		curLng.setText(event.getLongitude().toString());
 		
-		EditText distance = (EditText)findViewById(R.id.distance);
+		TextView distance = (TextView)findViewById(R.id.distance);
 		
 		double metres = gps.getDistance(event.getLocation());
 		String bearing = GPS.bearingToString(gps.getBearing(event.getLocation()));
