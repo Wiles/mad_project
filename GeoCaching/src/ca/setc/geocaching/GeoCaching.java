@@ -1,5 +1,7 @@
 package ca.setc.geocaching;
 
+import java.text.DecimalFormat;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.location.Location;
@@ -97,6 +99,18 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
 		
 		EditText distance = (EditText)findViewById(R.id.distance);
 		
-		distance.setText(gps.getDistance(event.getLocation()).toString());
+		double metres = gps.getDistance(event.getLocation());
+		String bearing = GPS.bearingToString(gps.getBearing(event.getLocation()));
+		String distanceText;
+		if(metres >= 1000)
+		{
+			distanceText = new DecimalFormat("#.#").format(metres/1000) + " km " + bearing;
+		} 
+		else 
+		{
+			distanceText = new DecimalFormat("#.#").format(metres) + " m " + bearing;
+		}
+		
+		distance.setText(distanceText);
 	}
 }

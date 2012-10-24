@@ -19,6 +19,13 @@ public class GPS {
 	
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
 	
+	private static String[] rosePoints = new String[]{
+		"N", "NNE", "NE", "ENE",
+		"E", "ESE", "SE", "SSE",
+		"S", "SSW", "SW", "WSW",
+		"W", "WNW", "NW", "NNW",
+		};
+	
 	private GPS()
 	{
 	}
@@ -90,5 +97,42 @@ public class GPS {
 			return 0.0;
 		}
 		return (double) location.distanceTo(destination);
+	}
+
+	public double getBearing(Location location) {
+		if(this.destination == null || location == null){
+			return 0.0;
+		}
+		return location.bearingTo(destination);
+	}
+	
+	public static String bearingToString(Double bearing)
+	{
+		if(bearing < 0)
+		{
+			bearing += 360;
+		}
+		
+		if(bearing > 360 - (360/rosePoints.length/2) || bearing <= (360/rosePoints.length/2))
+		{
+			return "N";
+		}
+		
+		double min = (360/rosePoints.length/2);
+		
+		for(int i = 1; i < rosePoints.length; ++i)
+		{
+			if(bearing > min && bearing <= min + 360/rosePoints.length )
+			{
+				return rosePoints[i];
+			}
+			else
+			{
+				min += 360/rosePoints.length;
+			}
+			
+		}
+				
+		return bearing.toString();
 	}
 }
