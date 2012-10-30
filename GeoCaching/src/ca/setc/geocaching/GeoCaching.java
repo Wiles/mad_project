@@ -9,18 +9,27 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.ParseException;
+import com.parse.SignUpCallback;
 
-public class GeoCaching extends MapActivity implements LocationChangedListener {
+public class GeoCaching extends MapActivity implements LocationChangedListener  {
 
+	private ParseUser user;
 	protected Dialog mSplashDialog;
 	protected MapController mc;
 	GPS gps = GPS.getInstance();
@@ -31,27 +40,11 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
         
         Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
 
-    	Location destination = new Location("");
-        destination.setLatitude(0.0);
-        destination.setLongitude(0.0);
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();
 
         showSplashScreen();
-        setContentView(R.layout.activity_geo_caching);
-        MapView mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
-        mc = mapView.getController();
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        gps.AddLocationChangedListener(this);
-        gps.setDestination(destination);
-        gps.setLocationManager(lm);
-
-        TextView destLat = (TextView)findViewById(R.id.destLat);
-        TextView destLng = (TextView)findViewById(R.id.destLong);
-		destLat.setText("0.0");
-		destLng.setText("0.0");
     }
 
     @Override
@@ -67,6 +60,31 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
         }
     }
     
+    protected void showMapScreen()
+    {
+    	Location destination = new Location("");
+        destination.setLatitude(0.0);
+        destination.setLongitude(0.0);
+        setContentView(R.layout.activity_geo_caching);
+        MapView mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setBuiltInZoomControls(true);
+        mc = mapView.getController();
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        gps.AddLocationChangedListener(this);
+        gps.setDestination(destination);
+        gps.setLocationManager(lm);
+
+        TextView destLat = (TextView)findViewById(R.id.destLat);
+        TextView destLng = (TextView)findViewById(R.id.destLong);
+		destLat.setText("0.0");
+		destLng.setText("0.0");
+    }
+    
+    protected void showLogin()
+    {
+    	setContentView(R.layout.login);
+    }
+    
     protected void showSplashScreen() {
         mSplashDialog = new Dialog(this, R.layout.splashscreen);
         mSplashDialog.setContentView(R.layout.splashscreen);
@@ -78,6 +96,7 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
         handler.postDelayed(new Runnable() {
           public void run() {
             removeSplashScreen();
+            showLogin();
           }
         }, 3000);
     }
@@ -112,5 +131,43 @@ public class GeoCaching extends MapActivity implements LocationChangedListener {
 		}
 		
 		distance.setText(distanceText);
+	}
+
+	public void onClick(View v) {
+		
+		EditText name = (EditText)findViewById(R.id.et_username);
+		EditText password = (EditText)findViewById(R.id.et_password);
+		EditText password2 = (EditText)findViewById(R.id.et_password2);
+		EditText email = (EditText)findViewById(R.id.et_email);
+		if(v.getId() == R.id.btn_login)
+		{
+			ParseUser.logInInBackground(name.getText().toString(), password.getText().toString(), new LogInCallback() {
+				  public void done(ParseUser user, ParseException e) {
+				    if (user != null) {
+				      showMapScreen();
+				    } else {
+				      Toast.makeText(null, "Login failed", Toast.LENGTH_SHORT).show();
+				    }
+				  }
+				});
+		}
+		else if (v.getId() == R.id.btn_signup)
+		{
+			user = new ParseUser();
+			user.setUsername(name.getText().toString());
+			user.setPassword(password.getText().toString());
+			user.setEmail(email.getText().toString());
+			user.signUpInBackground(new SignUpCallback() {
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+					      showMapScreen();	
+				    } else {
+					      Toast.makeText(null, "Signup failed", Toast.LENGTH_SHORT).show();
+				    }
+					
+				}
+			});
+		}
 	}
 }
