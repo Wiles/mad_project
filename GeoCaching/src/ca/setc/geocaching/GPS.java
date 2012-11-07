@@ -30,7 +30,7 @@ public class GPS {
 	{
 	}
 	
-	static GPS getInstance()
+	public static GPS getInstance()
 	{
 		if(instance == null)
 		{

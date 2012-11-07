@@ -6,5 +6,9 @@
     <string name="title_activity_geo_caching">GeoCaching</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="splash_title">THIS IS A SPLASH SCREEN!</string>
+    <string name="add_destination">Add Destination</string>
+    <string name="set_destination">Set Destination</string>
+    <string name="login_error">Login Failed</string>
+    <string name="title_activity_map">Map</string>
 
 </resources>

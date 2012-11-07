@@ -3,48 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <EditText
-        android:id="@+id/et_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Username" >
+
+	<EditText
+	    android:id="@+id/et_username"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:ems="10"
+	    android:hint="Username"
+	    android:text="tits" >
 
-        <requestFocus />
-    </EditText>
+		<requestFocus />
+	</EditText>
 
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="Password" />
+	<EditText
+	    android:id="@+id/et_password"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:ems="10"
+	    android:hint="Password"
+	    android:inputType="textPassword"
+	    android:text="asdfghjkl" />
 
-    <Button
+	<Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
         android:onClick="onClick"				/>
-
-    <EditText
+	<EditText
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" 
-        android:onClick="o"/>
-
-    <EditText
-        android:id="@+id/et_password2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword"
-        android:text="password" />
-
-    <Button
+        android:hint="E-mail"
+        android:onClick="onClick" />
+
+	<Button
         android:id="@+id/btn_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
