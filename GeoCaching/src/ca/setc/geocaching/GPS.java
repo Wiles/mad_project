@@ -3,6 +3,9 @@ package ca.setc.geocaching;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,11 +16,13 @@ import ca.setc.geocaching.events.LocationChangedListener;
 public class GPS {
 	
 	private static GPS instance;
-	
+	private Location currentLocation;
 	private Location destination;
 	private LocationManager lm;
 	
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
+
+	private final Logger log = LoggerFactory.getLogger(GPS.class);
 	
 	private static String[] rosePoints = new String[]{
 		"N", "NNE", "NE", "ENE",
@@ -48,8 +53,7 @@ public class GPS {
 	
 	public Location getCurrentLocation()
 	{
-		//todo
-		return new Location("");
+		return currentLocation;
 	}
 	
 	public Location getDestination()
@@ -69,6 +73,8 @@ public class GPS {
 	
 	private class LL implements LocationListener {
 		public void onLocationChanged(Location location) {
+			log.debug("Location changed. lat:{}, long:{}", location.getLatitude(), location.getLongitude());
+			currentLocation = location;
 			for(LocationChangedListener listener : locationChangedListeners)
 			{
 				listener.LocationChanged(new LocationChangedEvent(location));

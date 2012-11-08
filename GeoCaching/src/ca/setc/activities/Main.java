@@ -33,14 +33,14 @@ public class Main extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ConfigureLog4J.configure();
-		/*
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			
 			public void uncaughtException(Thread thread, Throwable ex) {
-				log.error("Unhandled Exception", ex);	
+				log.error("Unhandled Exception", ex);
+				//TODO mail logs
 			}
 		} );
-		*/
+		log.info("Starting up");
 		log.info("{} : {}", "Phone MANUFACTURER", android.os.Build.MANUFACTURER);
 		log.info("{} : {}", "Phone Model", android.os.Build.MODEL);
 		log.info("{} : {}", "Android Version", android.os.Build.VERSION.RELEASE);
@@ -56,6 +56,7 @@ public class Main extends Activity {
 	}
 
 	protected void removeSplashScreen() {
+		log.debug("removing splashscreen");
 		if (mSplashDialog != null) {
 			mSplashDialog.dismiss();
 			mSplashDialog = null;
@@ -78,6 +79,7 @@ public class Main extends Activity {
 	}
 
 	protected void showSplashScreen() {
+		log.debug("Showing splashscreen");
 		mSplashDialog = new Dialog(this, R.layout.splashscreen);
 		mSplashDialog.setContentView(R.layout.splashscreen);
 		mSplashDialog.setCancelable(false);
@@ -99,6 +101,7 @@ public class Main extends Activity {
 
 	public void onClick(View v) {
 
+		log.debug("Button Clicked. Id: {}", v.getId());
 		if (v.getId() == R.id.btn_login) {
 			Button login = (Button)findViewById(R.id.btn_login);
 			Button signup = (Button)findViewById(R.id.btn_signup);
@@ -107,21 +110,25 @@ public class Main extends Activity {
 			signup.setEnabled(false);
 			try {
 				
-				EditText name = (EditText) findViewById(R.id.et_username);
+				final EditText name = (EditText) findViewById(R.id.et_username);
+				log.debug("Attempting to login as {}", name);
 				EditText password = (EditText) findViewById(R.id.et_password);
 				ParseUser.logInInBackground(name.getText().toString(), password
 						.getText().toString(), new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
 						if (user != null) {
+							log.debug("Logged in as {} with id {}", name, user.getObjectId());
 							setUser(user);
 							showMapScreen();
 						} else {
+							log.error("Log attempt failed", e);
 							Toast.makeText(null, R.string.login_error,
 									Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
 			} catch (Exception e) {
+				log.error("Log attempt failed", e);
 				e.printStackTrace();
 				login.setEnabled(true);
 				signup.setEnabled(true);
@@ -135,6 +142,9 @@ public class Main extends Activity {
 			EditText name = (EditText) findViewById(R.id.et_username);
 			EditText password = (EditText) findViewById(R.id.et_password);
 			EditText email = (EditText) findViewById(R.id.et_email);
+			
+			log.debug("Attempting to signip as {} with email {}", name, email);
+			
 			user = new ParseUser();
 			user.setUsername(name.getText().toString());
 			user.setPassword(password.getText().toString());
@@ -143,11 +153,12 @@ public class Main extends Activity {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
+						log.error("Signup attempt succeeded. Id: {}", user.getObjectId());
 						showMapScreen();
 					} else {
+						log.error("Signup attempt failed", e);
 						Toast.makeText(null, R.string.login_error,
 								Toast.LENGTH_SHORT).show();
-
 					}
 				}
 			});

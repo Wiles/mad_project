@@ -13,8 +13,10 @@ public class ConfigureLog4J {
                 
         logConfigurator.setFileName(Environment.getExternalStorageDirectory() + File.separator + "myapp.log");
         logConfigurator.setRootLevel(Level.ALL);
-        // Set log level of a specific logger
-        // logConfigurator.setLevel("org.apache", Level.ERROR);
+        logConfigurator.setImmediateFlush(true);
+        logConfigurator.setMaxBackupSize(5);
+        logConfigurator.setMaxFileSize(1024 * 512);
+        
         logConfigurator.configure();
     }
 }
