@@ -117,7 +117,7 @@ public class Main extends Activity {
 						.getText().toString(), new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
 						if (user != null) {
-							log.debug("Logged in as {} with id {}", name, user.getObjectId());
+							log.debug("Logged in as {} with id {}", name.getText().toString(), user.getObjectId());
 							setUser(user);
 							showMapScreen();
 						} else {
@@ -143,7 +143,7 @@ public class Main extends Activity {
 			EditText password = (EditText) findViewById(R.id.et_password);
 			EditText email = (EditText) findViewById(R.id.et_email);
 			
-			log.debug("Attempting to signip as {} with email {}", name, email);
+			log.debug("Attempting to signip as {} with email {}", name.getText().toString(), email.getText().toString());
 			
 			user = new ParseUser();
 			user.setUsername(name.getText().toString());
