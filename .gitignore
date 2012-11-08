@@ -1,1 +1,8 @@
 .metadata
+gen/
+target/
+bin/
+.settings/
+*.out.xml
+.classpath
+.project

@@ -1,4 +1,7 @@
-package activities;
+package ca.setc.activities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.geocaching.R;
+import ca.setc.logging.ConfigureLog4J;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -23,10 +27,24 @@ public class Main extends Activity {
 	// TODO find better way to pass user around
 	public static ParseUser user;
 	protected Dialog mSplashDialog;
-
+	private final Logger log = LoggerFactory.getLogger(Main.class);
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ConfigureLog4J.configure();
+		/*
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			
+			public void uncaughtException(Thread thread, Throwable ex) {
+				log.error("Unhandled Exception", ex);	
+			}
+		} );
+		*/
+		log.info("{} : {}", "Phone MANUFACTURER", android.os.Build.MANUFACTURER);
+		log.info("{} : {}", "Phone Model", android.os.Build.MODEL);
+		log.info("{} : {}", "Android Version", android.os.Build.VERSION.RELEASE);
+		
 		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
 		showSplashScreen();
 	}

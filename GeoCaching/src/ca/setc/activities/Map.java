@@ -1,13 +1,16 @@
-package activities;
+package ca.setc.activities;
 
 import java.text.DecimalFormat;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import ca.setc.geocaching.GPS;
@@ -31,7 +34,6 @@ public class Map extends MapActivity implements LocationChangedListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_caching);
-
     	Location destination = new Location("");
         destination.setLatitude(0.0);
         destination.setLongitude(0.0);
@@ -81,29 +83,30 @@ public class Map extends MapActivity implements LocationChangedListener{
 	public void onClick(View v) {
 		if (v.getId() == R.id.btn_add_dest_screen)
 		{
-	    	setContentView(R.layout.add_destination);
-		}
-		else if (v.getId() == R.id.btn_add_dest)
-		{
-			try{
-				Double lat = Double.parseDouble(((EditText)findViewById(R.id.et_add_lat)).getText().toString());
-				Double lng = Double.parseDouble(((EditText)findViewById(R.id.et_add_long)).getText().toString());
+			Dialog dia = new Dialog(this, R.layout.add_destination);
+			dia.setContentView(R.layout.add_destination);
+			dia.setCancelable(false);
+			dia.setOwnerActivity(this);
+			Button btn = (Button)findViewById(R.id.btn_add_dest);
+			btn.setOnClickListener(new OnClickListener() {
 				
-				ParseObject dest = new ParseObject("Destination");
-				ParseGeoPoint pgp = new ParseGeoPoint(lat, lng);
-				dest.add("location", pgp);
-				dest.add("creator", Main.user);
-				try {
-					dest.save();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				public void onClick(View v) {
+					Double lat = Double.parseDouble(((EditText)findViewById(R.id.et_add_lat)).getText().toString());
+					Double lng = Double.parseDouble(((EditText)findViewById(R.id.et_add_long)).getText().toString());
+					
+					ParseObject dest = new ParseObject("Destination");
+					ParseGeoPoint pgp = new ParseGeoPoint(lat, lng);
+					dest.add("location", pgp);
+					dest.add("creator", Main.user);
+					try {
+						dest.save();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-			}
-			finally
-			{
-		    	setContentView(R.layout.activity_geo_caching);
-			}
+			});
+			dia.show();	
 		}
 	}
 }
