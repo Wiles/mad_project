@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
@@ -75,6 +76,26 @@ public class Main extends Activity  {
 
 	protected void showLogin() {
 		setContentView(R.layout.login);
+		
+		
+		
+		if("True".equalsIgnoreCase(Preferences.get("Remember")))
+		{
+			((CheckBox)findViewById(R.id.cb_remember)).setChecked(true);
+			String username = Preferences.get("Username");
+			if(username != null)
+			{
+				EditText name = (EditText) findViewById(R.id.et_username);
+				name.setText(username);
+			}
+			
+			String password = Preferences.get("Password");
+			if(password != null)
+			{
+				EditText name = (EditText) findViewById(R.id.et_password);
+				name.setText(password);
+			}
+		}
 	}
 
 	protected void showSplashScreen() {
@@ -100,10 +121,13 @@ public class Main extends Activity  {
 
 	public void onClick(View v) {
 
+		boolean remember = ((CheckBox)findViewById(R.id.cb_remember)).isChecked();
+		Preferences.setBoolean("Remember", remember);
 		log.debug("Button Clicked. Id: {}", v.getId());
 		if (v.getId() == R.id.btn_login) {
 			Button login = (Button)findViewById(R.id.btn_login);
 			Button signup = (Button)findViewById(R.id.btn_signup);
+			
 
 			login.setEnabled(false);
 			signup.setEnabled(false);
@@ -112,8 +136,18 @@ public class Main extends Activity  {
 				final EditText name = (EditText) findViewById(R.id.et_username);
 				log.debug("Attempting to login as {}", name);
 				EditText password = (EditText) findViewById(R.id.et_password);
-				ParseUser.logInInBackground(name.getText().toString(), password
-						.getText().toString(), new LogInCallback() {
+				String username = name.getText().toString();
+				String pass = password.getText().toString();
+				Preferences.set("Username", username);
+				if(remember)
+				{
+					Preferences.set("Password", pass);
+				}
+				else
+				{
+					Preferences.set("Password", null);
+				}
+				ParseUser.logInInBackground(username, pass, new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
 						if (user != null) {
 							Analytics.send("login");
@@ -147,8 +181,20 @@ public class Main extends Activity  {
 			log.debug("Attempting to signup as {} with email {}", name.getText().toString(), email.getText().toString());
 			
 			user = new ParseUser();
-			user.setUsername(name.getText().toString());
-			user.setPassword(password.getText().toString());
+			String username = name.getText().toString();
+			String pass = password.getText().toString();
+			Preferences.set("Username", username);
+			if(remember)
+			{
+				Preferences.set("Password", pass);
+			}
+			else
+			{
+
+				Preferences.set("Password", null);
+			}
+			user.setUsername(username);
+			user.setPassword(pass);
 			user.setEmail(email.getText().toString());
 			user.signUpInBackground(new SignUpCallback() {
 				@Override

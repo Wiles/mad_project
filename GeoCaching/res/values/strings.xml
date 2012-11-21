@@ -12,5 +12,6 @@
     <string name="title_activity_map">Map</string>
     <string name="Yes">Yes</string>
 	<string name="No">No</string>
+	<string name="remember">Remember me?</string>
 	<string name="report_error_message">An exectected error has occured and this application must close. Would you like to send an error report?</string>
 </resources>

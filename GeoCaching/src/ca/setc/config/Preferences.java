@@ -32,4 +32,14 @@ public class Preferences {
 		}
 	}
 	
+	public static void setBoolean(String key, boolean value)
+	{
+		if(settings != null)
+		{
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(key, value);
+			editor.commit();
+		}
+	}
+	
 }
