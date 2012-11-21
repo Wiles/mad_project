@@ -42,4 +42,14 @@ public class Preferences {
 		}
 	}
 	
+	public static Boolean getBoolean(String key, boolean defVal)
+	{
+		if(settings != null)
+		{
+			return settings.getBoolean(key, defVal);
+		}
+		return defVal;
+		
+	}
+	
 }

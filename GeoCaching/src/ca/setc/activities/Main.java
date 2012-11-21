@@ -36,13 +36,14 @@ public class Main extends Activity  {
 		super.onCreate(savedInstanceState);
 		Preferences.setSharedPreferences(getSharedPreferences("GeoCaching Preferences", MODE_PRIVATE));
 		ConfigureLog4J.configure();
+		
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			
+
 			public void uncaughtException(Thread thread, Throwable ex) {
+
 				log.error("Unhandled Exception", ex);
-				//TODO send report dialog
-			}
-		} );
+		    }
+		});
 
 		Thread.currentThread().setUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler());
 		log.info("Starting up");
@@ -79,7 +80,7 @@ public class Main extends Activity  {
 		
 		
 		
-		if("True".equalsIgnoreCase(Preferences.get("Remember")))
+		if(Preferences.getBoolean("Remember", false))
 		{
 			((CheckBox)findViewById(R.id.cb_remember)).setChecked(true);
 			String username = Preferences.get("Username");
@@ -128,9 +129,9 @@ public class Main extends Activity  {
 			Button login = (Button)findViewById(R.id.btn_login);
 			Button signup = (Button)findViewById(R.id.btn_signup);
 			
-
 			login.setEnabled(false);
 			signup.setEnabled(false);
+				
 			try {
 				
 				final EditText name = (EditText) findViewById(R.id.et_username);
@@ -155,6 +156,7 @@ public class Main extends Activity  {
 							user.saveInBackground();
 							log.debug("Logged in as {} with id {}", name.getText().toString(), user.getObjectId());
 							setUser(user);
+							finish();
 							showMapScreen();
 						} else {
 							log.error("Log attempt failed", e);
@@ -164,7 +166,6 @@ public class Main extends Activity  {
 				});
 			} catch (Exception e) {
 				log.error("Log attempt failed", e);
-				e.printStackTrace();
 				login.setEnabled(true);
 				signup.setEnabled(true);
 			}
