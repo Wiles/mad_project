@@ -1,0 +1,40 @@
+Push Notifications
+
+Android:
+
+http://developer.android.com/guide/google/gcm/gcm.html
+http://developer.android.com/guide/google/gcm/gs.html
+
+Windows Phone 7
+http://msdn.microsoft.com/en-us/library/windowsphone/develop/ff402558(v=vs.92).aspx
+
+Windows 8
+http://mobile.dzone.com/articles/windows-8-notifications-push
+
+Blackberry 10
+https://developer.blackberry.com/cascades/documentation/device_platform/push/index.html
+https://developer.blackberry.com/cascades/documentation/device_platform/push/developing_a_push_enabled_app.html
+
+
+iOS
+http://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/ApplePushService/ApplePushService.html
+http://www.raywenderlich.com/3443/apple-push-notification-services-tutorial-part-12
+
+
+
+Podcasts
+
+.NET developer
+http://www.dotnetrocks.com/
+
+Physical Architecture stories for Design
+http://99percentinvisible.org/
+
+Practical Advice for the Entrepreneur
+http://www.startupsfortherestofus.com/
+
+Mobile OS developer (Android/Windows focus)
+http://www.thetabletshow.com/
+
+Two struggling Mobile app developers talk about the businesses
+http://www.whatnowpodcast.com/

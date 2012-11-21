@@ -10,5 +10,7 @@
     <string name="set_destination">Set Destination</string>
     <string name="login_error">Login Failed</string>
     <string name="title_activity_map">Map</string>
-
+    <string name="Yes">Yes</string>
+	<string name="No">No</string>
+	<string name="report_error_message">An exectected error has occured and this application must close. Would you like to send an error report?</string>
 </resources>

@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,7 +39,7 @@ public class Map extends MapActivity implements LocationChangedListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log.debug("{}", "Entering map activity");
+        log.debug("Entering map activity");
         setContentView(R.layout.activity_geo_caching);
     	Location destination = new Location("");
         destination.setLatitude(0.0);
@@ -55,20 +56,33 @@ public class Map extends MapActivity implements LocationChangedListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_geo_caching, menu);
+        getMenuInflater().inflate(R.menu.activity_map, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                //TODO
+                return true;
+            case R.id.menu_add_destination:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void LocationChanged(LocationChangedEvent event) {
 		log.debug("Location changed. Lat: {}, Long: {}", event.getLatitude(), event.getLongitude());
 		mc.setCenter(event.getGeoPoint());
-		Main.user.add("Location", new ParseGeoPoint(event.getLatitude(), event.getLongitude()));
+		Main.user.put("Location", new ParseGeoPoint(event.getLatitude(), event.getLongitude()));
 		Main.user.saveEventually();
 		TextView distance = (TextView)findViewById(R.id.distance);
 		
@@ -113,13 +127,12 @@ public class Map extends MapActivity implements LocationChangedListener{
 					log.debug("New Destination. Late:{}, Long:{}", lat, lng);
 					ParseObject dest = new ParseObject("Destination");
 					ParseGeoPoint pgp = new ParseGeoPoint(lat, lng);
-					dest.add("location", pgp);
-					dest.add("creator", Main.user);
+					dest.put("location", pgp);
+					dest.put("creator", Main.user);
 					try {
 						dest.save();
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-
+						//TODO dispaly failed to add destination message
 						log.error("Failed to save new destination", e);
 					}
 				}

@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import ca.setc.config.Preferences;
 import ca.setc.geocaching.R;
+import ca.setc.logging.Analytics;
 import ca.setc.logging.ConfigureLog4J;
 
 import com.parse.LogInCallback;
@@ -22,9 +24,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-public class Main extends Activity {
+public class Main extends Activity  {
 
-	// TODO find better way to pass user around
 	public static ParseUser user;
 	protected Dialog mSplashDialog;
 	private final Logger log = LoggerFactory.getLogger(Main.class);
@@ -32,27 +33,31 @@ public class Main extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Preferences.setSharedPreferences(getSharedPreferences("GeoCaching Preferences", MODE_PRIVATE));
 		ConfigureLog4J.configure();
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			
 			public void uncaughtException(Thread thread, Throwable ex) {
 				log.error("Unhandled Exception", ex);
-				//TODO mail logs
+				//TODO send report dialog
 			}
 		} );
+
+		Thread.currentThread().setUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler());
 		log.info("Starting up");
 		log.info("{} : {}", "Phone MANUFACTURER", android.os.Build.MANUFACTURER);
 		log.info("{} : {}", "Phone Model", android.os.Build.MODEL);
 		log.info("{} : {}", "Android Version", android.os.Build.VERSION.RELEASE);
 		
+		log.debug("Initializing Parse");
 		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
+		log.debug("Parse Initialized");
 		showSplashScreen();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_geo_caching, menu);
-		return true;
+		return false;
 	}
 
 	protected void removeSplashScreen() {
@@ -65,13 +70,7 @@ public class Main extends Activity {
 
 	protected void showMapScreen() {
 		Intent intent = new Intent(this, Map.class);
-		try{
-			startActivity(intent);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		startActivity(intent);
 	}
 
 	protected void showLogin() {
@@ -117,13 +116,15 @@ public class Main extends Activity {
 						.getText().toString(), new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
 						if (user != null) {
+							Analytics.send("login");
+							user.increment("access_count");
+							user.saveInBackground();
 							log.debug("Logged in as {} with id {}", name.getText().toString(), user.getObjectId());
 							setUser(user);
 							showMapScreen();
 						} else {
 							log.error("Log attempt failed", e);
-							Toast.makeText(null, R.string.login_error,
-									Toast.LENGTH_SHORT).show();
+							Toast.makeText(null, R.string.login_error, Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -143,7 +144,7 @@ public class Main extends Activity {
 			EditText password = (EditText) findViewById(R.id.et_password);
 			EditText email = (EditText) findViewById(R.id.et_email);
 			
-			log.debug("Attempting to signip as {} with email {}", name.getText().toString(), email.getText().toString());
+			log.debug("Attempting to signup as {} with email {}", name.getText().toString(), email.getText().toString());
 			
 			user = new ParseUser();
 			user.setUsername(name.getText().toString());
@@ -153,6 +154,8 @@ public class Main extends Activity {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
+						user.increment("access_count");
+						user.saveInBackground();
 						log.error("Signup attempt succeeded. Id: {}", user.getObjectId());
 						showMapScreen();
 					} else {
