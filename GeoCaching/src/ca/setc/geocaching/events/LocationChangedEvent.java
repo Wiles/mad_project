@@ -1,19 +1,17 @@
 package ca.setc.geocaching.events;
 
-import com.google.android.maps.GeoPoint;
-
-import android.location.Location;
+import ca.setc.parse.GeoLocation;
 
 public class LocationChangedEvent {
 	
-	private Location location;
+	private GeoLocation location;
 	
-	public LocationChangedEvent(Location location)
+	public LocationChangedEvent(GeoLocation location)
 	{
 		this.location = location;
 	}
 	
-	public Location getLocation()
+	public GeoLocation getLocation()
 	{
 		return location;
 	}
@@ -26,10 +24,5 @@ public class LocationChangedEvent {
 	public Double getLongitude()
 	{
 		return location.getLongitude();
-	}
-	
-	public GeoPoint getGeoPoint()
-	{
-		return new GeoPoint((int)(location.getLatitude() * 1e6), (int)(location.getLongitude() * 1e6));
 	}
 }

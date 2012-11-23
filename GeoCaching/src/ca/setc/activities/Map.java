@@ -16,6 +16,7 @@ import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
+import ca.setc.parse.GeoLocation;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -42,7 +43,7 @@ public class Map extends MapActivity implements LocationChangedListener{
         mc = mapView.getController();
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         gps.AddLocationChangedListener(this);
-        gps.setDestination(destination);
+        gps.setDestination(new GeoLocation(destination));
         gps.setCurrentLocation(Main.user.getCurrentLocation());
         gps.setLocationManager(lm);
     }
@@ -72,9 +73,9 @@ public class Map extends MapActivity implements LocationChangedListener{
 		return false;
 	}
 
-	public void LocationChanged(LocationChangedEvent event) {
+	public void locationChanged(LocationChangedEvent event) {
 		log.debug("Location changed. Lat: {}, Long: {}", event.getLatitude(), event.getLongitude());
-		mc.setCenter(event.getGeoPoint());
+		mc.setCenter(event.getLocation().toGeoPoint());
 		
 		Main.user.setCurrentLocation(event.getLocation());
 		

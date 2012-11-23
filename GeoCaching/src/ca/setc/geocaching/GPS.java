@@ -13,14 +13,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
-
-import com.parse.ParseGeoPoint;
+import ca.setc.parse.GeoLocation;
 
 public class GPS {
 	
 	private static GPS instance;
-	private Location currentLocation;
-	private Location destination;
+	private GeoLocation currentLocation;
+	private GeoLocation destination;
 	private LocationManager lm;
 	private LL ll = new LL();;
 	
@@ -54,22 +53,22 @@ public class GPS {
         this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
 	}
 	
-	public void setCurrentLocation(Location location)
+	public void setCurrentLocation(GeoLocation location)
 	{
-		ll.onLocationChanged(location);
+		ll.onLocationChanged(location.toLocation());
 	}
 	
-	public Location getCurrentLocation()
+	public GeoLocation getCurrentLocation()
 	{
 		return currentLocation;
 	}
 	
-	public Location getDestination()
+	public GeoLocation getDestination()
 	{
 		return destination;
 	}
 	
-	public void setDestination(Location destination)
+	public void setDestination(GeoLocation destination)
 	{
 		this.destination = destination;
 	}
@@ -82,10 +81,10 @@ public class GPS {
 	private class LL implements LocationListener {
 		public void onLocationChanged(Location location) {
 			log.debug("Location changed. lat:{}, long:{}", location.getLatitude(), location.getLongitude());
-			currentLocation = location;
+			currentLocation = new GeoLocation(location);
 			for(LocationChangedListener listener : locationChangedListeners)
 			{
-				listener.LocationChanged(new LocationChangedEvent(location));
+				listener.locationChanged(new LocationChangedEvent(currentLocation));
 			}
 		}
 
@@ -99,19 +98,19 @@ public class GPS {
 		}
 	}
 
-	public Double getDistance(Location location) {
+	public Double getDistance(GeoLocation location) {
 		if(this.destination == null || location == null)
 		{
 			return 0.0;
 		}
-		return (double) location.distanceTo(destination);
+		return (double) location.getDistance(destination);
 	}
 
-	public double getBearing(Location location) {
+	public double getBearing(GeoLocation location) {
 		if(this.destination == null || location == null){
 			return 0.0;
 		}
-		return location.bearingTo(destination);
+		return location.getBearing(destination);
 	}
 	
 	public static String bearingToString(Double bearing)
@@ -154,12 +153,5 @@ public class GPS {
 		{
 			return new DecimalFormat("#.#").format(metres) + " m";
 		}
-	}
-	
-	public static ParseGeoPoint locationToParseGeoPoint(Location location)
-	{
-		double lat = location.getLatitude();
-	  	double lng = location.getLongitude();
-		return new ParseGeoPoint(lat, lng);
 	}
 }

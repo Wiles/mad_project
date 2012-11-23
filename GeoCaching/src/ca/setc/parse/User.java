@@ -14,7 +14,7 @@ public class User {
 		this.parseUser = user;
 	}
 	
-	public Location getCurrentLocation()
+	public GeoLocation getCurrentLocation()
 	{
 		ParseGeoPoint location = parseUser.getParseGeoPoint("lastLocation");
 		Location loc = new Location("");
@@ -28,10 +28,10 @@ public class User {
 			loc.setLatitude(location.getLatitude());
 			loc.setLongitude(location.getLongitude());
 		}
-		return loc;
+		return new GeoLocation(loc);
 	}
 	
-	public void setCurrentLocation(Location location)
+	public void setCurrentLocation(GeoLocation location)
 	{
 		try
 		{

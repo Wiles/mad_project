@@ -59,7 +59,7 @@ public class SetDestinationActivity extends Activity {
         
     private void loadNear()
     {
-    	ParseGeoPoint userLocation = GPS.locationToParseGeoPoint(Main.user.getCurrentLocation());
+    	ParseGeoPoint userLocation = Main.user.getCurrentLocation().toParseGeoPoint();
     	ParseQuery query = new ParseQuery("Destination");
     	query.whereNear("location", userLocation);
     	query.setLimit(10);
@@ -83,7 +83,7 @@ public class SetDestinationActivity extends Activity {
 					ParseObject obj = arg0.get(i);
 					GeoLocation dest = new GeoLocation((ParseGeoPoint)obj.get("location"));
 					locations.add(dest);
-					GeoLocation curr = new GeoLocation(Main.user.getCurrentLocation());
+					GeoLocation curr = Main.user.getCurrentLocation();
 					str[i] = String.format("%s %s - %s", GPS.distanceToText(curr.getDistance(dest)), GPS.bearingToString(curr.getBearing(dest)), obj.get("description"));
 				}
 				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(that, android.R.layout.simple_list_item_1, android.R.id.text1, str);
@@ -92,7 +92,7 @@ public class SetDestinationActivity extends Activity {
 
 					public void onItemClick(AdapterView<?> adater, View view,
 							int position, long id) {
-						GPS.getInstance().setDestination(locations.get(position).toLocation());
+						GPS.getInstance().setDestination(locations.get(position));
 						dones();
 					}
 				});
