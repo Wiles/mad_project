@@ -1,4 +1,4 @@
-package ca.setc.config;
+package ca.setc.parse;
 
 import android.location.Location;
 

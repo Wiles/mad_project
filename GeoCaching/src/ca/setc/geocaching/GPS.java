@@ -1,5 +1,6 @@
 package ca.setc.geocaching;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
+
+import com.parse.ParseGeoPoint;
 
 public class GPS {
 	
@@ -139,5 +142,24 @@ public class GPS {
 		}
 				
 		return bearing.toString();
+	}
+	
+	public static String distanceToText(double metres)
+	{
+		if(metres >= 1000)
+		{
+			return new DecimalFormat("#.#").format(metres/1000) + " km";
+		} 
+		else 
+		{
+			return new DecimalFormat("#.#").format(metres) + " m";
+		}
+	}
+	
+	public static ParseGeoPoint locationToParseGeoPoint(Location location)
+	{
+		double lat = location.getLatitude();
+	  	double lng = location.getLongitude();
+		return new ParseGeoPoint(lat, lng);
 	}
 }

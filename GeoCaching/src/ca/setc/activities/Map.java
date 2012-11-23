@@ -1,7 +1,5 @@
 package ca.setc.activities;
 
-import java.text.DecimalFormat;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,20 +83,12 @@ public class Map extends MapActivity implements LocationChangedListener{
 		double metres = gps.getDistance(event.getLocation());
 		String bearing = GPS.bearingToString(gps.getBearing(event.getLocation()));
 		
-		String distanceText;
-		if(metres >= 1000)
-		{
-			distanceText = new DecimalFormat("#.#").format(metres/1000) + " km " + bearing;
-		} 
-		else 
-		{
-			distanceText = new DecimalFormat("#.#").format(metres) + " m " + bearing;
-		}
-
+		String distanceText = GPS.distanceToText(metres);
+		
 		log.debug("Bearing: {} As Text:{}", gps.getBearing(event.getLocation()), bearing);
 
 		log.debug("Distance: {} As Text: {}", metres, distanceText);
-		distance.setText(distanceText);
+		distance.setText(distanceText + " " + bearing);
 	}
 	
 
@@ -110,6 +100,13 @@ public class Map extends MapActivity implements LocationChangedListener{
 			log.debug("Entering Add destination screen event");
 			Intent intent = new Intent(this, AddDestinationActivity.class);
 			startActivity(intent);
+		} 
+		else if (v.getId() == R.id.btn_set_dest_screen)
+		{
+			log.debug("Entering set destination screen event");
+			Intent intent = new Intent(this, SetDestinationActivity.class);
+			startActivity(intent);
+			
 		}
 	}
 }

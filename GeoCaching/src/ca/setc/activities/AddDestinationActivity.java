@@ -14,7 +14,6 @@ import ca.setc.geocaching.R;
 
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 
 public class AddDestinationActivity extends Activity {
 	private final Logger log = LoggerFactory.getLogger(AddDestinationActivity.class);

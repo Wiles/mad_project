@@ -15,10 +15,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
-import ca.setc.config.User;
 import ca.setc.geocaching.R;
 import ca.setc.logging.Analytics;
 import ca.setc.logging.ConfigureLog4J;
+import ca.setc.parse.User;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
