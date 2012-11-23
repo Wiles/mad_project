@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
+import ca.setc.config.User;
 import ca.setc.geocaching.R;
 import ca.setc.logging.Analytics;
 import ca.setc.logging.ConfigureLog4J;
@@ -27,7 +28,7 @@ import com.parse.SignUpCallback;
 
 public class Main extends Activity  {
 
-	public static ParseUser user;
+	public static User user;
 	protected Dialog mSplashDialog;
 	private final Logger log = LoggerFactory.getLogger(Main.class);
 	
@@ -40,7 +41,6 @@ public class Main extends Activity  {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 			public void uncaughtException(Thread thread, Throwable ex) {
-
 				log.error("Unhandled Exception", ex);
 		    }
 		});
@@ -77,8 +77,6 @@ public class Main extends Activity  {
 
 	protected void showLogin() {
 		setContentView(R.layout.login);
-		
-		
 		
 		if(Preferences.getBoolean("Remember", false))
 		{
@@ -117,7 +115,7 @@ public class Main extends Activity  {
 	}
 
 	public void setUser(ParseUser user) {
-		Main.user = user;
+		Main.user = new User(user);
 	}
 
 	public void onClick(View v) {
@@ -158,6 +156,7 @@ public class Main extends Activity  {
 							setUser(user);
 							finish();
 							showMapScreen();
+							finish();
 						} else {
 							log.error("Log attempt failed", e);
 							Toast.makeText(null, R.string.login_error, Toast.LENGTH_SHORT).show();
@@ -181,7 +180,7 @@ public class Main extends Activity  {
 			
 			log.debug("Attempting to signup as {} with email {}", name.getText().toString(), email.getText().toString());
 			
-			user = new ParseUser();
+			final ParseUser pUser = new ParseUser();
 			String username = name.getText().toString();
 			String pass = password.getText().toString();
 			Preferences.set("Username", username);
@@ -194,17 +193,18 @@ public class Main extends Activity  {
 
 				Preferences.set("Password", null);
 			}
-			user.setUsername(username);
-			user.setPassword(pass);
-			user.setEmail(email.getText().toString());
-			user.signUpInBackground(new SignUpCallback() {
+			pUser.setUsername(username);
+			pUser.setPassword(pass);
+			pUser.setEmail(email.getText().toString());
+			pUser.signUpInBackground(new SignUpCallback() {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
-						user.increment("access_count");
-						user.saveInBackground();
-						log.error("Signup attempt succeeded. Id: {}", user.getObjectId());
+						pUser.increment("access_count");
+						pUser.saveInBackground();
+						log.error("Signup attempt succeeded. Id: {}", pUser.getObjectId());
 						showMapScreen();
+						finish();
 					} else {
 						log.error("Signup attempt failed", e);
 						Toast.makeText(null, R.string.login_error,

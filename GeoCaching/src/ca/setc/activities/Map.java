@@ -5,17 +5,14 @@ import java.text.DecimalFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
@@ -25,9 +22,6 @@ import ca.setc.geocaching.events.LocationChangedListener;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 
 public class Map extends MapActivity implements LocationChangedListener{
 
@@ -51,6 +45,7 @@ public class Map extends MapActivity implements LocationChangedListener{
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         gps.AddLocationChangedListener(this);
         gps.setDestination(destination);
+        gps.setCurrentLocation(Main.user.getCurrentLocation());
         gps.setLocationManager(lm);
     }
 
@@ -82,8 +77,9 @@ public class Map extends MapActivity implements LocationChangedListener{
 	public void LocationChanged(LocationChangedEvent event) {
 		log.debug("Location changed. Lat: {}, Long: {}", event.getLatitude(), event.getLongitude());
 		mc.setCenter(event.getGeoPoint());
-		Main.user.put("Location", new ParseGeoPoint(event.getLatitude(), event.getLongitude()));
-		Main.user.saveEventually();
+		
+		Main.user.setCurrentLocation(event.getLocation());
+		
 		TextView distance = (TextView)findViewById(R.id.distance);
 		
 		double metres = gps.getDistance(event.getLocation());
@@ -112,32 +108,8 @@ public class Map extends MapActivity implements LocationChangedListener{
 		if (v.getId() == R.id.btn_add_dest_screen)
 		{
 			log.debug("Entering Add destination screen event");
-			Dialog dia = new Dialog(this, R.layout.add_destination);
-			dia.setContentView(R.layout.add_destination);
-			dia.setCancelable(false);
-			dia.setOwnerActivity(this);
-			//TODO find out why this button is null
-			Button btn = (Button)findViewById(R.id.btn_add_dest);
-			btn.setOnClickListener(new OnClickListener() {
-				
-				public void onClick(View v) {
-					Double lat = Double.parseDouble(((EditText)findViewById(R.id.et_add_lat)).getText().toString());
-					Double lng = Double.parseDouble(((EditText)findViewById(R.id.et_add_long)).getText().toString());
-
-					log.debug("New Destination. Late:{}, Long:{}", lat, lng);
-					ParseObject dest = new ParseObject("Destination");
-					ParseGeoPoint pgp = new ParseGeoPoint(lat, lng);
-					dest.put("location", pgp);
-					dest.put("creator", Main.user);
-					try {
-						dest.save();
-					} catch (ParseException e) {
-						//TODO dispaly failed to add destination message
-						log.error("Failed to save new destination", e);
-					}
-				}
-			});
-			dia.show();	
+			Intent intent = new Intent(this, AddDestinationActivity.class);
+			startActivity(intent);
 		}
 	}
 }

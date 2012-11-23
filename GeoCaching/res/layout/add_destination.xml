@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lat" />
+
     <EditText
         android:id="@+id/et_add_lat"
         android:layout_width="match_parent"
@@ -13,11 +19,30 @@
         <requestFocus />
     </EditText>
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Long" />
+
     <EditText
         android:id="@+id/et_add_long"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description" />
+
+    <EditText
+        android:id="@+id/et_desc"
+        android:layout_width="match_parent"
+        android:layout_height="288dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
 
     <Button
         android:id="@+id/btn_add_dest"

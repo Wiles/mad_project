@@ -19,6 +19,7 @@ public class GPS {
 	private Location currentLocation;
 	private Location destination;
 	private LocationManager lm;
+	private LL ll = new LL();;
 	
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
 
@@ -47,8 +48,12 @@ public class GPS {
 	public void setLocationManager(LocationManager lm)
 	{
         this.lm = lm;
-        LL ll = new LL();
         this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+	}
+	
+	public void setCurrentLocation(Location location)
+	{
+		ll.onLocationChanged(location);
 	}
 	
 	public Location getCurrentLocation()
