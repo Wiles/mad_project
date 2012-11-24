@@ -1,7 +1,5 @@
 package ca.setc.parse;
 
-import android.location.Location;
-
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
@@ -17,18 +15,7 @@ public class User {
 	public GeoLocation getCurrentLocation()
 	{
 		ParseGeoPoint location = parseUser.getParseGeoPoint("lastLocation");
-		Location loc = new Location("");
-		if(location == null)
-		{
-			loc.setLatitude(0.0);
-			loc.setLongitude(0.0);
-		}
-		else
-		{
-			loc.setLatitude(location.getLatitude());
-			loc.setLongitude(location.getLongitude());
-		}
-		return new GeoLocation(loc);
+		return new GeoLocation(location);
 	}
 	
 	public void setCurrentLocation(GeoLocation location)

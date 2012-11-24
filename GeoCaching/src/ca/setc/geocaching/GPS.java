@@ -11,6 +11,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import ca.setc.geocaching.events.DesinationChangedEvent;
+import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 import ca.setc.parse.GeoLocation;
@@ -24,6 +26,7 @@ public class GPS {
 	private LL ll = new LL();;
 	
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
+	private List<DestinationChangedListener> destinationChangedListeners = new LinkedList<DestinationChangedListener>();
 
 	private final Logger log = LoggerFactory.getLogger(GPS.class);
 	
@@ -71,9 +74,13 @@ public class GPS {
 	public void setDestination(GeoLocation destination)
 	{
 		this.destination = destination;
+		for(DestinationChangedListener listener : destinationChangedListeners)
+		{
+			listener.destinationChanged(new DesinationChangedEvent(destination));
+		}
 	}
 	
-	public void AddLocationChangedListener(LocationChangedListener listener)
+	public void addLocationChangedListener(LocationChangedListener listener)
 	{
 		locationChangedListeners.add(listener);
 	}
@@ -153,5 +160,9 @@ public class GPS {
 		{
 			return new DecimalFormat("#.#").format(metres) + " m";
 		}
+	}
+
+	public void addDestinationChangedListener(DestinationChangedListener listener) {
+		destinationChangedListeners.add(listener);
 	}
 }

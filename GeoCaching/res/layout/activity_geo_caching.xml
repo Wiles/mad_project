@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:clickable="false" >
 
 	<com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,5 +54,28 @@
         android:focusableInTouchMode="false"
         android:inputType="none"
         android:text="" />
+
+	<Button
+	    android:id="@+id/btn_view_logbook"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
+	    android:layout_toLeftOf="@+id/btn_add_dest_screen"
+	    android:onClick="onClick"
+	    android:text="View Logbook"
+	    android:visibility="invisible" />
+
+	<Button
+	    android:id="@+id/btn_sign_logbook"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_toRightOf="@+id/btn_view_logbook"
+	    android:clickable="false"
+	    android:text="Sign Logbook"
+	    android:onClick="onClick"
+	    android:visibility="invisible" />
 
 </RelativeLayout>

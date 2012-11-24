@@ -5,15 +5,17 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
+import ca.setc.geocaching.events.DesinationChangedEvent;
+import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 import ca.setc.parse.GeoLocation;
@@ -21,11 +23,16 @@ import ca.setc.parse.GeoLocation;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.parse.ParseObject;
 
-public class Map extends MapActivity implements LocationChangedListener{
+public class Map extends MapActivity implements LocationChangedListener, DestinationChangedListener{
 
 	private GPS gps = GPS.getInstance();
 	protected MapController mc;
+	
+	public static ParseObject destination;
+	
+	private static final double LOGBOOK_RANGE = 5.0;
 
 	private final Logger log = LoggerFactory.getLogger(Map.class);
 	
@@ -34,17 +41,17 @@ public class Map extends MapActivity implements LocationChangedListener{
         super.onCreate(savedInstanceState);
         log.debug("Entering map activity");
         setContentView(R.layout.activity_geo_caching);
-    	Location destination = new Location("");
-        destination.setLatitude(0.0);
-        destination.setLongitude(0.0);
         log.debug("Initial Destination. lat:{} long:{}", 0.0, 0.0);
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mc = mapView.getController();
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        gps.AddLocationChangedListener(this);
-        gps.setDestination(new GeoLocation(destination));
+        
+        gps.addLocationChangedListener(this);
         gps.setCurrentLocation(Main.user.getCurrentLocation());
+        
+        gps.addDestinationChangedListener(this);
+        
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         gps.setLocationManager(lm);
     }
 
@@ -74,22 +81,13 @@ public class Map extends MapActivity implements LocationChangedListener{
 	}
 
 	public void locationChanged(LocationChangedEvent event) {
-		log.debug("Location changed. Lat: {}, Long: {}", event.getLatitude(), event.getLongitude());
-		mc.setCenter(event.getLocation().toGeoPoint());
+		GeoLocation location = event.getLocation();
+		log.debug("Location changed. Lat: {}, Long: {}", location.getLatitude(), location.getLongitude());
+		mc.setCenter(location.toGeoPoint());
 		
-		Main.user.setCurrentLocation(event.getLocation());
+		Main.user.setCurrentLocation(location);
 		
-		TextView distance = (TextView)findViewById(R.id.distance);
-		
-		double metres = gps.getDistance(event.getLocation());
-		String bearing = GPS.bearingToString(gps.getBearing(event.getLocation()));
-		
-		String distanceText = GPS.distanceToText(metres);
-		
-		log.debug("Bearing: {} As Text:{}", gps.getBearing(event.getLocation()), bearing);
-
-		log.debug("Distance: {} As Text: {}", metres, distanceText);
-		distance.setText(distanceText + " " + bearing);
+		updateDisplay(location, gps.getDestination());
 	}
 	
 
@@ -107,7 +105,83 @@ public class Map extends MapActivity implements LocationChangedListener{
 			log.debug("Entering set destination screen event");
 			Intent intent = new Intent(this, SetDestinationActivity.class);
 			startActivity(intent);
-			
+		}
+		else if(v.getId() == R.id.btn_view_logbook)
+		{
+			log.debug("Entering view logbook screen event");
+			Intent intent = new Intent(this, LogBookActivity.class);
+			startActivity(intent);
+		}
+		else if(v.getId() == R.id.btn_sign_logbook)
+		{
+			log.debug("Entering sign logbook screen event");
+			Intent intent = new Intent(this, SignLogBook.class);
+			startActivity(intent);
+		}
+	}
+
+	public void destinationChanged(DesinationChangedEvent event) {
+		GeoLocation destination = event.getDestination();
+		log.debug("Destination changed. Lat: {}, Long: {}", destination.getLatitude(), destination.getLongitude());
+		updateDisplay(gps.getCurrentLocation(), destination);
+	}
+	
+	private void updateDisplay(GeoLocation location, GeoLocation destination)
+	{
+
+		TextView distance = (TextView)findViewById(R.id.distance);
+		if(location == null)
+		{
+			distance.setText(String.format("Awaiting GPS information..."));
+			showLogBookButtons(false);
+			return;
+		}
+		else if(destination == null)
+		{
+			distance.setText(String.format("Please select a destination"));
+			showLogBookButtons(false);
+			return;
+		}
+		
+		double metres = location.getDistance(destination);
+		
+		if(metres <= LOGBOOK_RANGE)
+		{
+			showLogBookButtons(true);
+		}
+		else
+		{
+			showLogBookButtons(false);
+		}
+		
+		String bearing = GPS.bearingToString(gps.getBearing(location));
+		
+		String distanceText = GPS.distanceToText(metres);
+		
+		log.debug("Bearing: {} As Text:{}", gps.getBearing(location), bearing);
+
+		log.debug("Distance: {} As Text: {}", metres, distanceText);
+		distance.setText(distanceText + " " + bearing);
+	}
+	
+	private void showLogBookButtons(boolean show)
+	{
+		Button viewLogBook = (Button)findViewById(R.id.btn_view_logbook);
+		Button signLogBook = (Button)findViewById(R.id.btn_sign_logbook);
+		
+		if(show)
+		{
+			viewLogBook.setVisibility(View.VISIBLE);
+			viewLogBook.setClickable(true);
+			signLogBook.setVisibility(View.VISIBLE);
+			signLogBook.setClickable(true);
+		}
+		else
+		{
+			viewLogBook.setVisibility(View.INVISIBLE);
+			viewLogBook.setClickable(false);
+			signLogBook.setVisibility(View.INVISIBLE);
+			signLogBook.setClickable(false);
 		}
 	}
 }

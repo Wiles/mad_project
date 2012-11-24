@@ -15,14 +15,4 @@ public class LocationChangedEvent {
 	{
 		return location;
 	}
-	
-	public Double getLatitude()
-	{
-		return location.getLatitude();
-	}
-	
-	public Double getLongitude()
-	{
-		return location.getLongitude();
-	}
 }

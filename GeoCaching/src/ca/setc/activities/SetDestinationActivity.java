@@ -30,7 +30,7 @@ public class SetDestinationActivity extends Activity {
 
 	private final Logger log = LoggerFactory.getLogger(SetDestinationActivity.class);
 
-	private List<GeoLocation> locations = new ArrayList<GeoLocation>(); 
+	private List<ParseObject> locations = new ArrayList<ParseObject>(); 
 	
 	private SetDestinationActivity that = this;
 	
@@ -70,7 +70,6 @@ public class SetDestinationActivity extends Activity {
 				locations.clear();
 				if(arg1 != null)
 				{
-
 					Toast.makeText(null, arg1.getMessage(),
 							Toast.LENGTH_LONG).show();
 				}
@@ -81,8 +80,8 @@ public class SetDestinationActivity extends Activity {
 				for(int i = 0; i < arg0.size(); ++i)
 				{
 					ParseObject obj = arg0.get(i);
+					locations.add(obj);
 					GeoLocation dest = new GeoLocation((ParseGeoPoint)obj.get("location"));
-					locations.add(dest);
 					GeoLocation curr = Main.user.getCurrentLocation();
 					str[i] = String.format("%s %s - %s", GPS.distanceToText(curr.getDistance(dest)), GPS.bearingToString(curr.getBearing(dest)), obj.get("description"));
 				}
@@ -92,7 +91,8 @@ public class SetDestinationActivity extends Activity {
 
 					public void onItemClick(AdapterView<?> adater, View view,
 							int position, long id) {
-						GPS.getInstance().setDestination(locations.get(position));
+						GPS.getInstance().setDestination(new GeoLocation ((ParseGeoPoint)locations.get(position).get("location")));
+						Map.destination = locations.get(position);
 						dones();
 					}
 				});
