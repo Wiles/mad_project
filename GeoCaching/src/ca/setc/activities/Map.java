@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import ca.setc.config.Preferences;
+import ca.setc.dialogs.TwitterDialog;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.DesinationChangedEvent;
@@ -115,6 +118,14 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 			log.debug("Entering sign logbook screen event");
 			Intent intent = new Intent(this, SignLogBook.class);
 			startActivity(intent);
+
+    		if(!Preferences.getBoolean("twitter_disabled", false))
+    		{
+    			String m = String.format(getString(R.string.tweet),new GeoLocation(Map.destination.getParseGeoPoint("location")));
+        		new TwitterDialog(this,"http://twitter.com/?status="+Uri.encode(m)).show();
+        		
+        		
+    		}
 		}
 	}
 

@@ -20,6 +20,8 @@ public class SignLogBook extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_log_book);
+
+		EditText message = (EditText)findViewById(R.id.ed_message);
     }
 
     @Override
@@ -32,8 +34,7 @@ public class SignLogBook extends Activity {
     	if(v.getId() == R.id.btn_sign)
     	{
     		EditText message = (EditText)findViewById(R.id.ed_message);
-    		String msg = message.getText().toString(); 
-    		GeoLocation loc = new GeoLocation(Map.destination.getParseGeoPoint("location"));
+    		String msg = message.getText().toString();
     		
     		if(msg.length() == 0)
     		{
@@ -42,12 +43,6 @@ public class SignLogBook extends Activity {
 				return;
     		}
     		
-    		if(!Preferences.getBoolean("twitter_disabled", false))
-    		{
-        		new TwitterDialog(this,"http://twitter.com/?status="+Uri.encode(
-        				String.format(getString(R.string.tweet),loc))).show();
-        		
-    		}
     		ParseObject parse = new ParseObject("LogEntry");
     		parse.put("user", Main.user.toParseUser());
     		parse.put("destination", Map.destination);
