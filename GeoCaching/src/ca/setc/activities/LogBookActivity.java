@@ -37,7 +37,7 @@ public class LogBookActivity extends Activity {
 			public void done(List<ParseObject> list, ParseException e) {
 				if(e != null)
 				{
-					Toast.makeText(getApplicationContext(), "Could not retrieve log entries",
+					Toast.makeText(getApplicationContext(),getString(R.string.retrieve_entry_failure),
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -61,13 +61,12 @@ public class LogBookActivity extends Activity {
 				{
 					ParseObject obj = entryList.get(i);
 					entries.add(obj);
-					String username = "Unknown";
+					String username = getString(R.string.unknown_user);
 					try {
 						ParseUser user = obj.getParseUser("user").fetch();
 						username = user.getUsername();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (ParseException ignore) {
+						//ignore
 					}
 					str[i] = String.format("%s %s - %s", obj.getCreatedAt().toLocaleString(), username, obj.getString("message"));
 				}

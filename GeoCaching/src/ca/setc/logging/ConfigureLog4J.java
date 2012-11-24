@@ -7,15 +7,21 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
 /**
  * Call {@link #configure()}} from your application's activity.
  */
-public class ConfigureLog4J {
+public final class ConfigureLog4J {
+	
+	private static final int DEFAULT_FILE_SIZE = 1024 * 512;
+	private static final int DEFAULT_FILE_COUNT = 5;
+	
+	private ConfigureLog4J(){}
+	
     public static void configure() {
         final LogConfigurator logConfigurator = new LogConfigurator();
                 
         logConfigurator.setFileName(Environment.getExternalStorageDirectory() + File.separator + "myapp.log");
         logConfigurator.setRootLevel(Level.ALL);
         logConfigurator.setImmediateFlush(true);
-        logConfigurator.setMaxBackupSize(5);
-        logConfigurator.setMaxFileSize(1024 * 512);
+        logConfigurator.setMaxBackupSize(DEFAULT_FILE_COUNT);
+        logConfigurator.setMaxFileSize(DEFAULT_FILE_SIZE);
         
         logConfigurator.configure();
     }

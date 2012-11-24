@@ -28,7 +28,7 @@ import com.parse.ParseObject;
 public class Map extends MapActivity implements LocationChangedListener, DestinationChangedListener{
 
 	private GPS gps = GPS.getInstance();
-	protected MapController mc;
+	private MapController mc;
 	
 	public static ParseObject destination;
 	
@@ -41,7 +41,6 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
         super.onCreate(savedInstanceState);
         log.debug("Entering map activity");
         setContentView(R.layout.activity_geo_caching);
-        log.debug("Initial Destination. lat:{} long:{}", 0.0, 0.0);
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mc = mapView.getController();
@@ -120,9 +119,9 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 	}
 
 	public void destinationChanged(DesinationChangedEvent event) {
-		GeoLocation destination = event.getDestination();
-		log.debug("Destination changed. Lat: {}, Long: {}", destination.getLatitude(), destination.getLongitude());
-		updateDisplay(gps.getCurrentLocation(), destination);
+		GeoLocation dest = event.getDestination();
+		log.debug("Destination changed. Lat: {}, Long: {}", dest.getLatitude(), dest.getLongitude());
+		updateDisplay(gps.getCurrentLocation(), dest);
 	}
 	
 	private void updateDisplay(GeoLocation location, GeoLocation destination)
@@ -131,13 +130,13 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 		TextView distance = (TextView)findViewById(R.id.distance);
 		if(location == null)
 		{
-			distance.setText(String.format("Awaiting GPS information..."));
+			distance.setText(getString(R.string.await_gps));
 			showLogBookButtons(false);
 			return;
 		}
 		else if(destination == null)
 		{
-			distance.setText(String.format("Please select a destination"));
+			distance.setText(getString(R.string.select_dest));
 			showLogBookButtons(false);
 			return;
 		}

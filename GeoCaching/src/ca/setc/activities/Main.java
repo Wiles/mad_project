@@ -30,8 +30,11 @@ import com.parse.SignUpCallback;
 public class Main extends Activity  {
 
 	public static User user;
-	protected Dialog mSplashDialog;
+	private Dialog mSplashDialog;
 	private final Logger log = LoggerFactory.getLogger(Main.class);
+	
+	private static final int SPASH_DURATION = 3000;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,7 @@ public class Main extends Activity  {
 				removeSplashScreen();
 				showLogin();
 			}
-		}, 3000);
+		}, SPASH_DURATION);
 	}
 
 	public void setUser(ParseUser user) {

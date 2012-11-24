@@ -6,8 +6,9 @@
 
 package ca.setc.dialogs;
 
-import ca.setc.geocaching.R;
-import android.annotation.SuppressLint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,8 +26,11 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import ca.setc.geocaching.R;
 
-public class Twitter_Dialog extends Dialog {
+public class TwitterDialog extends Dialog {
+
+	private final Logger log = LoggerFactory.getLogger(TwitterDialog.class);
 
 	static final int BLUE = 0xFF6D84B4;
 	static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
@@ -44,7 +48,7 @@ public class Twitter_Dialog extends Dialog {
 	private LinearLayout mContent;
 	private TextView mTitle;
 
-	public Twitter_Dialog(Context context, String url) {
+	public TwitterDialog(Context context, String url) {
 		super(context);
 		mUrl = url;
 	}
@@ -54,7 +58,7 @@ public class Twitter_Dialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		mSpinner = new ProgressDialog(getContext());
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mSpinner.setMessage("Loading...");
+		mSpinner.setMessage("Loading…");
 
 		mContent = new LinearLayout(getContext());
 		mContent.setOrientation(LinearLayout.VERTICAL);
@@ -87,14 +91,13 @@ public class Twitter_Dialog extends Dialog {
 		mContent.addView(mTitle);
 	}
 
-	@SuppressLint("SetJavaScriptEnabled")
 	private void setUpWebView() {
 		mWebView = new WebView(getContext());
 		mWebView.setVerticalScrollBarEnabled(false);
 		mWebView.setHorizontalScrollBarEnabled(false);
-		mWebView.setWebViewClient(new Twitter_Dialog.DialogWebViewClient());
+		mWebView.setWebViewClient(new TwitterDialog.DialogWebViewClient());
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		System.out.println(" mURL = " + mUrl);
+		log.info("mURL = {}", mUrl);
 
 		mWebView.loadUrl(mUrl);
 		mWebView.setLayoutParams(FILL);
@@ -113,7 +116,7 @@ public class Twitter_Dialog extends Dialog {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			Twitter_Dialog.this.dismiss();
+			TwitterDialog.this.dismiss();
 		}
 
 		@Override
@@ -130,7 +133,7 @@ public class Twitter_Dialog extends Dialog {
 				mTitle.setText(title);
 				if (title.equals("Twitter")) {
 					// This will close the Dialog after tweeting
-					Twitter_Dialog.this.dismiss();
+					TwitterDialog.this.dismiss();
 
 				}
 			}

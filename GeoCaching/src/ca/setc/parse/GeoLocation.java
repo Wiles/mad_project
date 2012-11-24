@@ -6,9 +6,11 @@ import com.google.android.maps.GeoPoint;
 import com.parse.ParseGeoPoint;
 
 public class GeoLocation {
-	double latitude;
-	double longitude;
-	ParseGeoPoint pgp;
+	private double latitude;
+	private double longitude;
+	private ParseGeoPoint pgp;
+	
+	private static final double E6 = 1E6;
 	
 	public GeoLocation(Location location)
 	{
@@ -42,7 +44,7 @@ public class GeoLocation {
 	
 	public GeoPoint toGeoPoint()
 	{
-		return new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
+		return new GeoPoint((int)(latitude * E6), (int)(longitude * E6));
 	}
 	
 	public ParseGeoPoint toParseGeoPoint()
@@ -74,5 +76,18 @@ public class GeoLocation {
 		Location dest = destination.toLocation();
 		Location curr = toLocation();
 		return (double) curr.bearingTo(dest);
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		Location loc = toLocation();
+		
+		sb.append(Location.convert(loc.getLatitude(), Location.FORMAT_SECONDS));
+		sb.append(" ");
+		sb.append(Location.convert(loc.getLongitude(), Location.FORMAT_SECONDS));
+		
+		return sb.toString();
 	}
 }

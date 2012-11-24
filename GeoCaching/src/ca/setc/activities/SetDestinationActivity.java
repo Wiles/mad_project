@@ -34,6 +34,8 @@ public class SetDestinationActivity extends Activity {
 	
 	private SetDestinationActivity that = this;
 	
+	private static final int MAX_DESTINATION = 10;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,7 @@ public class SetDestinationActivity extends Activity {
     	ParseGeoPoint userLocation = Main.user.getCurrentLocation().toParseGeoPoint();
     	ParseQuery query = new ParseQuery("Destination");
     	query.whereNear("location", userLocation);
-    	query.setLimit(10);
+    	query.setLimit(MAX_DESTINATION);
     	query.findInBackground(new FindCallback() {
 
 			@Override

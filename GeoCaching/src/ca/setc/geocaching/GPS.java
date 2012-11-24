@@ -18,9 +18,15 @@ import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 import ca.setc.parse.GeoLocation;
 
-public class GPS {
+public final class GPS {
 	
 	private static final double FEET_IN_METRE = 3.28084;
+	
+	private static final double DEGREES = 360.0;
+	
+	private static final double FEET_IN_MILE = 5280.0;
+	
+	private static final double METRE_IN_KILO = 1000.0;
 	
 	private static GPS instance;
 	private GeoLocation currentLocation;
@@ -123,34 +129,35 @@ public class GPS {
 		return location.getBearing(destination);
 	}
 	
-	public static String bearingToString(Double bearing)
+	public static String bearingToString(double bearing)
 	{
-		if(bearing < 0)
+		Double fixedBearing = bearing;
+		if(fixedBearing < 0)
 		{
-			bearing += 360;
+			fixedBearing += DEGREES;
 		}
 		
-		if(bearing > 360 - (360/rosePoints.length/2) || bearing <= (360/rosePoints.length/2))
+		if(fixedBearing > DEGREES - (DEGREES/rosePoints.length/2) || fixedBearing <= (DEGREES/rosePoints.length/2))
 		{
 			return "N";
 		}
 		
-		double min = (360/rosePoints.length/2);
+		double min = (DEGREES/rosePoints.length/2);
 		
 		for(int i = 1; i < rosePoints.length; ++i)
 		{
-			if(bearing > min && bearing <= min + 360/rosePoints.length )
+			if(fixedBearing > min && fixedBearing <= min + DEGREES/rosePoints.length )
 			{
 				return rosePoints[i];
 			}
 			else
 			{
-				min += 360/rosePoints.length;
+				min += DEGREES/rosePoints.length;
 			}
 			
 		}
 				
-		return bearing.toString();
+		return fixedBearing.toString();
 	}
 	
 	public static String distanceToText(double metres)
@@ -160,9 +167,9 @@ public class GPS {
 		if(imperial)
 		{
 			double feet = metres * FEET_IN_METRE;
-			if(feet >= 5280)
+			if(feet >= FEET_IN_MILE)
 			{
-				return new DecimalFormat("#.#").format(feet/5280) + "m";
+				return new DecimalFormat("#.#").format(feet/FEET_IN_MILE) + "m";
 			}
 			else
 			{
@@ -172,9 +179,9 @@ public class GPS {
 		}
 		else
 		{
-			if(metres >= 1000)
+			if(metres >= METRE_IN_KILO)
 			{
-				return new DecimalFormat("#.#").format(metres/1000) + " km";
+				return new DecimalFormat("#.#").format(metres/METRE_IN_KILO) + " km";
 			} 
 			else 
 			{
