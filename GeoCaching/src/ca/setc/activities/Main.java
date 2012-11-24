@@ -1,3 +1,4 @@
+
 package ca.setc.activities;
 
 import org.slf4j.Logger;
@@ -42,6 +43,10 @@ public class Main extends Activity  {
 
 			public void uncaughtException(Thread thread, Throwable ex) {
 				log.error("Unhandled Exception", ex);
+
+				Intent intent = new Intent(getApplicationContext(), UnhandledExceptionActivity.class);
+				intent.putExtra("exception", ex.getMessage());
+				startActivity(intent);
 		    }
 		});
 

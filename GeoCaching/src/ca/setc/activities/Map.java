@@ -66,9 +66,8 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                //TODO
-                return true;
-            case R.id.menu_add_destination:
+    			Intent intent = new Intent(this, UserSettings.class);
+    			startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

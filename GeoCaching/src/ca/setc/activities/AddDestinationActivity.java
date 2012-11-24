@@ -31,8 +31,7 @@ public class AddDestinationActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_destination, menu);
-        return true;
+        return false;
     }
     
     public void onClick(View v) {

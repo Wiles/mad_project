@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import ca.setc.config.Preferences;
 import ca.setc.geocaching.events.DesinationChangedEvent;
 import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
@@ -18,6 +19,8 @@ import ca.setc.geocaching.events.LocationChangedListener;
 import ca.setc.parse.GeoLocation;
 
 public class GPS {
+	
+	private static final double FEET_IN_METRE = 3.28084;
 	
 	private static GPS instance;
 	private GeoLocation currentLocation;
@@ -152,14 +155,34 @@ public class GPS {
 	
 	public static String distanceToText(double metres)
 	{
-		if(metres >= 1000)
+		boolean imperial = "imperial".equals(Preferences.get("units"));
+		
+		if(imperial)
 		{
-			return new DecimalFormat("#.#").format(metres/1000) + " km";
-		} 
-		else 
-		{
-			return new DecimalFormat("#.#").format(metres) + " m";
+			double feet = metres * FEET_IN_METRE;
+			if(feet >= 5280)
+			{
+				return new DecimalFormat("#.#").format(feet/5280) + "m";
+			}
+			else
+			{
+				return new DecimalFormat("#.#").format(feet) + "ft";
+			}
+			
 		}
+		else
+		{
+			if(metres >= 1000)
+			{
+				return new DecimalFormat("#.#").format(metres/1000) + " km";
+			} 
+			else 
+			{
+				return new DecimalFormat("#.#").format(metres) + " m";
+			}
+			
+		}
+		
 	}
 
 	public void addDestinationChangedListener(DestinationChangedListener listener) {

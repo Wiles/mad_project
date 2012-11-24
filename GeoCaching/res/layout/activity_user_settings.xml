@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="onClick" >
+
+    <CheckBox
+        android:id="@+id/cb_disable_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onClick"
+        android:text="@string/Disable_Twitter" />
+
+    <RadioGroup
+        android:id="@+id/radio_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/cb_disable_twitter"
+        android:onClick="onClick" >
+
+        <RadioButton
+            android:id="@+id/radio_metric"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onClick"
+            android:text="@string/Metric" />
+
+        <RadioButton
+            android:id="@+id/radio_imperial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/Imperial" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/cb_analytics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/radio_unit"
+        android:onClick="onClick"
+        android:text="@string/Analytics" />
+
+</RelativeLayout>

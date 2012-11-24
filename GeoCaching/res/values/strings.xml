@@ -13,11 +13,17 @@
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     <string name="remember">Remember me?</string>
-    <string name="report_error_message">An exectected error has occured and this application must close. Would you like to send an error report?</string>
+    <string name="report_error_message">The following error occured and this application must close. Would you like to send an error report?</string>
     <string name="title_activity_add_destination">Add Destination</string>
     <string name="title_activity_set_destination">Set Destination</string>
-    <string name="loading">Loading...</string>
-    <string name="title_activity_log_book">LogBookActivity</string>
+    <string name="loading">Loading…</string>
+    <string name="title_activity_log_book">LogBook</string>
     <string name="title_activity_sign_log_book">Sign Logbook</string>
+    <string name="title_activity_unhandled_exception">Unhandled Error</string>
+    <string name="title_activity_user_settings">UserSettings</string>
+    <string name="Disable_Twitter">Disable Twitter</string>
+    <string name="Metric">Metric</string>
+    <string name="Imperial">Imperial</string>
+    <string name="Analytics">Send anony. Usage Data</string>
 
 </resources>

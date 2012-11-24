@@ -44,8 +44,7 @@ public class SetDestinationActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_set_destination, menu);
-        return true;
+        return false;
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
