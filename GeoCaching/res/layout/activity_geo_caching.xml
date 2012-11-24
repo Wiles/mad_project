@@ -63,7 +63,7 @@
 	    android:layout_alignParentLeft="true"
 	    android:layout_toLeftOf="@+id/btn_add_dest_screen"
 	    android:onClick="onClick"
-	    android:text="View Logbook"
+	    android:text="@string/view_logbook"
 	    android:visibility="invisible" />
 
 	<Button
@@ -74,8 +74,8 @@
 	    android:layout_alignParentRight="true"
 	    android:layout_toRightOf="@+id/btn_view_logbook"
 	    android:clickable="false"
-	    android:text="Sign Logbook"
 	    android:onClick="onClick"
+	    android:text="@string/sign_logbook"
 	    android:visibility="invisible" />
 
 </RelativeLayout>

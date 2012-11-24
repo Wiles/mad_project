@@ -25,5 +25,14 @@
     <string name="Metric">Metric</string>
     <string name="Imperial">Imperial</string>
     <string name="Analytics">Send anony. Usage Data</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    <string name="Description">Description</string>
+    <string name="Add">Add</string>
+    <string name="view_logbook">View Logbook</string>
+    <string name="sign_logbook">Sign Logbook</string>
+    <string name="message">Message</string>
+    <string name="sign">sign</string>
+    <string name="error">error</string>
 
 </resources>

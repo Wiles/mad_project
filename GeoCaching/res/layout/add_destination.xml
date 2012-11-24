@@ -3,39 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lat" />
-
+        android:text="@string/Latitude" />
+
     <EditText
         android:id="@+id/et_add_lat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/Latitude" >
 
         <requestFocus />
     </EditText>
-
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Long" />
-
+        android:text="@string/Longitude" />
+
     <EditText
         android:id="@+id/et_add_long"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" />
-
+        android:ems="10"
+        android:hint="@string/Longitude" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description" />
+        android:text="@string/Description" />
 
     <EditText
         android:id="@+id/et_desc"
@@ -43,12 +45,12 @@
         android:layout_height="288dp"
         android:ems="10"
         android:inputType="textMultiLine" />
-
+
     <Button
         android:id="@+id/btn_add_dest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="Add" />
+        android:text="@string/Add" />
 
 </LinearLayout>

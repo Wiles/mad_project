@@ -13,6 +13,7 @@
         android:layout_below="@+id/textView1"
         android:ems="10"
         android:gravity="left"
+        android:hint="@string/message"
         android:inputType="textMultiLine" >
 
         <requestFocus />
@@ -26,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:onClick="onClick"
-        android:text="Sign" />
+        android:text="@string/sign" />
 
     <TextView
         android:id="@+id/textView1"
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Message:"
+        android:text="@string/message"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
