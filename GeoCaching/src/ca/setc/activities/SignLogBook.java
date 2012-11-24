@@ -1,18 +1,14 @@
 package ca.setc.activities;
 
-import com.parse.ParseObject;
-
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import ca.setc.config.Preferences;
-import ca.setc.dialogs.TwitterDialog;
 import ca.setc.geocaching.R;
-import ca.setc.parse.GeoLocation;
+
+import com.parse.ParseObject;
 
 public class SignLogBook extends Activity {
 
@@ -20,8 +16,6 @@ public class SignLogBook extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_log_book);
-
-		EditText message = (EditText)findViewById(R.id.ed_message);
     }
 
     @Override
