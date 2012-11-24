@@ -78,13 +78,5 @@ public class LogBookActivity extends Activity {
 				}
 				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, str);
 				lv.setAdapter(adapter);
-				lv.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(AdapterView<?> adater, View view,
-							int position, long id) {
-						
-						finish();
-					}
-				});
     }
 }
