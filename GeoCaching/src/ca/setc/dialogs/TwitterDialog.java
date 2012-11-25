@@ -118,7 +118,7 @@ public class TwitterDialog extends Dialog {
 	private void setUpTitle() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Drawable icon = getContext().getResources().getDrawable(
-				R.drawable.ic_action_search);
+				R.drawable.twitter);
 		mTitle = new TextView(getContext());
 		mTitle.setText("Website");
 		mTitle.setTextColor(Color.WHITE);
