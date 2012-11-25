@@ -32,6 +32,7 @@ public class TwitterDialog extends Dialog {
 
 	private final Logger log = LoggerFactory.getLogger(TwitterDialog.class);
 
+	private final static float MAGIC = 0.5f;
 	static final int BLUE = 0xFF6D84B4;
 	static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
 	static final float[] DIMENSIONS_DIFF_PORTRAIT = { 40, 60 };
@@ -72,8 +73,8 @@ public class TwitterDialog extends Dialog {
 		addContentView(
 				mContent,
 				new LinearLayout.LayoutParams(display.getWidth()
-						- ((int) (dimensions[0] * scale + 0.5f)), display
-						.getHeight() - ((int) (dimensions[1] * scale + 0.5f))));
+						- ((int) (dimensions[0] * scale + MAGIC)), display
+						.getHeight() - ((int) (dimensions[1] * scale + MAGIC))));
 	}
 
 	private void setUpTitle() {

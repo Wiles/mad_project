@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import ca.setc.config.Preferences;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.parse.GeoLocation;
@@ -67,7 +68,7 @@ public class SetDestinationActivity extends Activity {
         
     private void loadNear()
     {
-    	ParseGeoPoint userLocation = Main.user.getCurrentLocation().toParseGeoPoint();
+    	ParseGeoPoint userLocation = Preferences.getCurrentUser().getCurrentLocation().toParseGeoPoint();
     	ParseQuery query = new ParseQuery("Destination");
     	query.whereNear("location", userLocation);
     	query.setLimit(MAX_DESTINATION);
@@ -90,7 +91,7 @@ public class SetDestinationActivity extends Activity {
 					ParseObject obj = arg0.get(i);
 					locations.add(obj);
 					GeoLocation dest = new GeoLocation((ParseGeoPoint)obj.get("location"));
-					GeoLocation curr = Main.user.getCurrentLocation();
+					GeoLocation curr = Preferences.getCurrentUser().getCurrentLocation();
 					str[i] = String.format("%s %s - %s", GPS.distanceToText(curr.getDistance(dest)), GPS.bearingToString(curr.getBearing(dest)), obj.get("description"));
 				}
 				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(that, android.R.layout.simple_list_item_1, android.R.id.text1, str);
@@ -100,7 +101,6 @@ public class SetDestinationActivity extends Activity {
 					public void onItemClick(AdapterView<?> adater, View view,
 							int position, long id) {
 						GPS.getInstance().setDestination(new GeoLocation ((ParseGeoPoint)locations.get(position).get("location")));
-						Map.destination = locations.get(position);
 						dones();
 					}
 				});

@@ -1,16 +1,28 @@
 package ca.setc.config;
 
+import ca.setc.parse.User;
 import android.content.SharedPreferences;
 
-public class Preferences {
+public final class Preferences {
 	
 	private static SharedPreferences settings;
+	private static User currentUser;
 	
 	private Preferences(){}
 	
 	public static void setSharedPreferences(SharedPreferences settings)
 	{
 		Preferences.settings = settings;
+	}
+	
+	public static void setCurrentUser(User user)
+	{
+		currentUser = user;
+	}
+	
+	public static User getCurrentUser()
+	{
+		return currentUser;
 	}
 	
 	public static String get(String key)

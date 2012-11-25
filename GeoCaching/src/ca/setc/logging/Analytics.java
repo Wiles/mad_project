@@ -4,7 +4,7 @@ import ca.setc.config.Preferences;
 
 import com.parse.ParseObject;
 
-public class Analytics {
+public final class Analytics {
 	
 	private Analytics(){}
 	

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 
 import com.parse.FindCallback;
@@ -29,7 +30,7 @@ public class LogBookActivity extends Activity {
 
         
         ParseQuery query = new ParseQuery("LogEntry");
-        query.whereEqualTo("destination", Map.destination);
+        query.whereEqualTo("destination", GPS.getInstance().getDestination());
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback() {
 

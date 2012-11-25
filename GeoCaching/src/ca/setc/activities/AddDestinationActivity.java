@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import ca.setc.config.Preferences;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 
@@ -48,7 +49,7 @@ public class AddDestinationActivity extends Activity {
 			ParseObject parse = new ParseObject("Destination");
 			try
 			{
-				parse.put("creator", Main.user.toParseUser());
+				parse.put("creator", Preferences.getCurrentUser().toParseUser());
 				parse.put("description", description.getText().toString());
 				ParseGeoPoint location = new ParseGeoPoint(Double.parseDouble(lat.getText().toString()), Double.parseDouble(lng.getText().toString()));
 				parse.put("location", location);

@@ -34,18 +34,18 @@ public class UnhandledExceptionActivity extends Activity {
     	if(v.getId() == R.id.btn_yes)
     	{
 			Toast.makeText(this, getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
-    		try {
+    		try {		
 	    		ParseObject object = new ParseObject("UnhandledError");
 	    		object.put("stacktrace", errorMessage);
 				object.save();
 			} catch (Exception ignore) {
 				//ignore
 			}
+        	finish();
     	}
-    	else if (v.getId() == R.id.btn_no)
+    	else
     	{
-    		
+        	finish();
     	}
-    	finish();
     }
 }

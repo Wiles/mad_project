@@ -32,7 +32,7 @@ public final class GPS {
 	private GeoLocation currentLocation;
 	private GeoLocation destination;
 	private LocationManager lm;
-	private LL ll = new LL();;
+	private LL ll = new LL();
 	
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
 	private List<DestinationChangedListener> destinationChangedListeners = new LinkedList<DestinationChangedListener>();
@@ -46,9 +46,7 @@ public final class GPS {
 		"W", "WNW", "NW", "NNW",
 		};
 	
-	private GPS()
-	{
-	}
+	private GPS(){}
 	
 	public static GPS getInstance()
 	{
@@ -61,7 +59,11 @@ public final class GPS {
 	
 	public void setLocationManager(LocationManager lm)
 	{
-        this.lm = lm;
+		if(this.lm != null)
+		{
+			this.lm.removeUpdates(ll);
+		}
+		this.lm = lm;
         this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
 	}
 	
@@ -163,17 +165,20 @@ public final class GPS {
 	public static String distanceToText(double metres)
 	{
 		boolean imperial = "imperial".equals(Preferences.get("units"));
-		
+		String unit = "m";
+		double distance = 0;
 		if(imperial)
 		{
 			double feet = metres * FEET_IN_METRE;
 			if(feet >= FEET_IN_MILE)
 			{
-				return new DecimalFormat("#.#").format(feet/FEET_IN_MILE) + "m";
+				unit = "m";
+				distance = feet/FEET_IN_MILE;
 			}
 			else
 			{
-				return new DecimalFormat("#.#").format(feet) + "ft";
+				unit = "ft";
+				distance = feet;
 			}
 			
 		}
@@ -181,14 +186,17 @@ public final class GPS {
 		{
 			if(metres >= METRE_IN_KILO)
 			{
-				return new DecimalFormat("#.#").format(metres/METRE_IN_KILO) + " km";
+				unit = "km";
+				distance = metres/METRE_IN_KILO;
 			} 
 			else 
 			{
-				return new DecimalFormat("#.#").format(metres) + " m";
+				unit = "m";
+				distance = metres;
 			}
 			
 		}
+		return new DecimalFormat("#.#").format(distance) + " " + unit;
 		
 	}
 

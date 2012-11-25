@@ -33,7 +33,7 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 	private GPS gps = GPS.getInstance();
 	private MapController mc;
 	
-	public static ParseObject destination;
+	private static ParseObject destination;
 	
 	private static final double LOGBOOK_RANGE = 5.0;
 
@@ -51,7 +51,7 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
         mc = mapView.getController();
         
         gps.addLocationChangedListener(this);
-        gps.setCurrentLocation(Main.user.getCurrentLocation());
+        gps.setCurrentLocation(Preferences.getCurrentUser().getCurrentLocation());
         
         gps.addDestinationChangedListener(this);
         
@@ -89,7 +89,7 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 		log.debug("Location changed. Lat: {}, Long: {}", location.getLatitude(), location.getLongitude());
 		mc.setCenter(location.toGeoPoint());
 		
-		Main.user.setCurrentLocation(location);
+		Preferences.getCurrentUser().setCurrentLocation(location);
 		
 		updateDisplay(location, gps.getDestination());
 	}
@@ -160,10 +160,14 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 		if(metres <= LOGBOOK_RANGE)
 		{
 			showLogBookButtons(true);
+	        MapView mapView = (MapView) findViewById(R.id.mapview);
+	        mapView.setBuiltInZoomControls(false);
 		}
 		else
 		{
 			showLogBookButtons(false);
+	        MapView mapView = (MapView) findViewById(R.id.mapview);
+	        mapView.setBuiltInZoomControls(true);
 		}
 		
 		String bearing = GPS.bearingToString(gps.getBearing(location));

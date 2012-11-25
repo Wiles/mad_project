@@ -33,12 +33,13 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 public class Main extends Activity {
-
-	public static User user;
+	
 	private Dialog mSplashDialog;
 	private final Logger log = LoggerFactory.getLogger(Main.class);
 
 	private static final int SPASH_DURATION = 3000;
+	
+	private static final String PASSWORD = "Password";
 
 	private ProgressDialog mSpinner;
 	
@@ -121,7 +122,7 @@ public class Main extends Activity {
 				name.setText(username);
 			}
 
-			String password = Preferences.get("Password");
+			String password = Preferences.get(PASSWORD);
 			if (password != null) {
 				EditText name = (EditText) findViewById(R.id.et_password);
 				name.setText(password);
@@ -146,10 +147,6 @@ public class Main extends Activity {
 		}, SPASH_DURATION);
 	}
 
-	public void setUser(ParseUser user) {
-		Main.user = new User(user);
-	}
-
 	public void onClick(View v) {
 
 		boolean remember = ((CheckBox) findViewById(R.id.cb_remember))
@@ -172,9 +169,9 @@ public class Main extends Activity {
 				String pass = password.getText().toString();
 				Preferences.set("Username", username);
 				if (remember) {
-					Preferences.set("Password", pass);
+					Preferences.set(PASSWORD, pass);
 				} else {
-					Preferences.set("Password", null);
+					Preferences.set(PASSWORD, null);
 				}
 
 				mSpinner.show();
@@ -188,7 +185,7 @@ public class Main extends Activity {
 									log.debug("Logged in as {} with id {}",
 											name.getText().toString(),
 											user.getObjectId());
-									setUser(user);
+									Preferences.setCurrentUser(new User(user));
 									finish();
 									showMapScreen();
 									mSpinner.dismiss();
@@ -225,10 +222,10 @@ public class Main extends Activity {
 			String pass = password.getText().toString();
 			Preferences.set("Username", username);
 			if (remember) {
-				Preferences.set("Password", pass);
+				Preferences.set(PASSWORD, pass);
 			} else {
 
-				Preferences.set("Password", null);
+				Preferences.set(PASSWORD, null);
 			}
 			pUser.setUsername(username);
 			pUser.setPassword(pass);
