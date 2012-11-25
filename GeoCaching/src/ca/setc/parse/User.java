@@ -38,16 +38,12 @@ public class User {
 	 *            the new current location
 	 */
 	public void setCurrentLocation(GeoLocation location) {
-		try {
-			parseUser.put(
-					"lastLocation",
-					new ParseGeoPoint(location.getLatitude(), location
-							.getLongitude()));
+		parseUser.put(
+				"lastLocation",
+				new ParseGeoPoint(location.getLatitude(), location
+						.getLongitude()));
 
-			parseUser.saveInBackground();
-		} catch (Exception ex) {
-			// TODO
-		}
+		parseUser.saveInBackground();
 	}
 
 	/**

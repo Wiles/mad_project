@@ -34,30 +34,27 @@ public class TwitterDialog extends Dialog {
 	private final Logger log = LoggerFactory.getLogger(TwitterDialog.class);
 
 	/** The Constant MAGIC. */
-	private final static float MAGIC = 0.5f;
+	private static 	final float MAGIC = 0.5f;
 
 	/** The Constant BLUE. */
-	static final int BLUE = 0xFF6D84B4;
+	private static final int BLUE = 0xFF6D84B4;
 
 	/** The Constant DIMENSIONS_DIFF_LANDSCAPE. */
-	static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
+	private static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
 
 	/** The Constant DIMENSIONS_DIFF_PORTRAIT. */
-	static final float[] DIMENSIONS_DIFF_PORTRAIT = { 40, 60 };
+	private static final float[] DIMENSIONS_DIFF_PORTRAIT = { 40, 60 };
 
 	/** The Constant FILL. */
-	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
+	private static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.FILL_PARENT,
 			ViewGroup.LayoutParams.FILL_PARENT);
 
 	/** The Constant MARGIN. */
-	static final int MARGIN = 4;
+	private static final int MARGIN = 4;
 
 	/** The Constant PADDING. */
-	static final int PADDING = 2;
-
-	/** The Constant DISPLAY_STRING. */
-	static final String DISPLAY_STRING = "touch";
+	private static final int PADDING = 2;
 
 	/** The url. */
 	private String mUrl;

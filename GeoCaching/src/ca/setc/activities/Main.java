@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -192,7 +191,7 @@ public class Main extends Activity {
 	}
 
 	/**
-	 * On click.
+	 * button click handler
 	 * 
 	 * @param v
 	 *            the v
@@ -203,92 +202,89 @@ public class Main extends Activity {
 				.isChecked();
 		Preferences.setBoolean("Remember", remember);
 		log.debug("Button Clicked. Id: {}", v.getId());
-		if (v.getId() == R.id.btn_login) {
-			Button login = (Button) findViewById(R.id.btn_login);
-			Button signup = (Button) findViewById(R.id.btn_signup);
 
-			login.setEnabled(false);
-			signup.setEnabled(false);
+		String name = ((EditText) findViewById(R.id.et_username)).getText()
+				.toString();
+		String password = ((EditText) findViewById(R.id.et_password)).getText()
+				.toString();
+		String email = ((EditText) findViewById(R.id.et_email)).getText()
+				.toString();
 
-			try {
-
-				final EditText name = (EditText) findViewById(R.id.et_username);
-				log.debug("Attempting to login as {}", name);
-				EditText password = (EditText) findViewById(R.id.et_password);
-				String username = name.getText().toString();
-				String pass = password.getText().toString();
-				Preferences.set("Username", username);
-				if (remember) {
-					Preferences.set(PASSWORD, pass);
-				} else {
-					Preferences.set(PASSWORD, null);
-				}
-
-				mSpinner.show();
-				ParseUser.logInInBackground(username, pass,
-						new LogInCallback() {
-
-							/*
-							 * (non-Javadoc)
-							 * 
-							 * @see
-							 * com.parse.LogInCallback#done(com.parse.ParseUser,
-							 * com.parse.ParseException)
-							 */
-							@Override
-							public void done(ParseUser user, ParseException e) {
-								if (user != null) {
-									Analytics.send("login");
-									user.increment("access_count");
-									user.saveInBackground();
-									log.debug("Logged in as {} with id {}",
-											name.getText().toString(),
-											user.getObjectId());
-									Preferences.setCurrentUser(new User(user));
-									finish();
-									showMapScreen();
-									mSpinner.dismiss();
-									finish();
-								} else {
-									log.error("Log attempt failed", e);
-									Toast.makeText(null, R.string.login_error,
-											Toast.LENGTH_SHORT).show();
-
-									mSpinner.dismiss();
-								}
-							}
-						});
-			} catch (Exception e) {
-				log.error("Log attempt failed", e);
-				login.setEnabled(true);
-				signup.setEnabled(true);
-			}
-		} else if (v.getId() == R.id.btn_signup) {
-			Button login = (Button) findViewById(R.id.btn_login);
-			Button signup = (Button) findViewById(R.id.btn_signup);
-
-			login.setEnabled(false);
-			signup.setEnabled(false);
-			EditText name = (EditText) findViewById(R.id.et_username);
-			EditText password = (EditText) findViewById(R.id.et_password);
-			EditText email = (EditText) findViewById(R.id.et_email);
-
-			log.debug("Attempting to signup as {} with email {}", name
-					.getText().toString(), email.getText().toString());
-
-			final ParseUser pUser = new ParseUser();
-			String username = name.getText().toString();
-			String pass = password.getText().toString();
-			Preferences.set("Username", username);
+		if (remember) {
+			Preferences.set("Username", name);
 			if (remember) {
-				Preferences.set(PASSWORD, pass);
+				Preferences.set(PASSWORD, password);
 			} else {
-
 				Preferences.set(PASSWORD, null);
 			}
+		}
+
+		if (v.getId() == R.id.btn_login) {
+			login(name, password);
+		} else if (v.getId() == R.id.btn_signup) {
+			signup(name, password, email);
+		}
+	}
+
+	/**
+	 * Login a user
+	 */
+	private void login(final String username, String password) {
+
+		try {
+
+			log.debug("Attempting to login as {}", username);
+
+			mSpinner.show();
+			ParseUser.logInInBackground(username, password,
+					new LogInCallback() {
+
+						/*
+						 * (non-Javadoc)
+						 * 
+						 * @see
+						 * com.parse.LogInCallback#done(com.parse.ParseUser,
+						 * com.parse.ParseException)
+						 */
+						@Override
+						public void done(ParseUser user, ParseException e) {
+							if (user != null) {
+								Analytics.send("login");
+								log.debug("Logged in as {} with id {}",
+										username, user.getObjectId());
+								Preferences.setCurrentUser(new User(user));
+								showMapScreen();
+								mSpinner.dismiss();
+								finish();
+							} else {
+								log.error("Log attempt failed", e);
+								Toast.makeText(Main.this, R.string.login_error,
+										Toast.LENGTH_SHORT).show();
+
+								mSpinner.dismiss();
+							}
+						}
+					});
+		} catch (Exception e) {
+			log.error("Log attempt failed", e);
+			Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT)
+					.show();
+
+			mSpinner.dismiss();
+		}
+
+	}
+
+	/**
+	 * Signup a new user
+	 */
+	private void signup(String username, String password, String email) {
+		log.debug("Attempting to signup as {} with email {}", username, email);
+		try {
+			final ParseUser pUser = new ParseUser();
 			pUser.setUsername(username);
-			pUser.setPassword(pass);
-			pUser.setEmail(email.getText().toString());
+			pUser.setPassword(password);
+			pUser.setEmail(email);
 			mSpinner.show();
 			pUser.signUpInBackground(new SignUpCallback() {
 
@@ -300,8 +296,6 @@ public class Main extends Activity {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
-						pUser.increment("access_count");
-						pUser.saveInBackground();
 						log.error("Signup attempt succeeded. Id: {}",
 								pUser.getObjectId());
 						showMapScreen();
@@ -314,6 +308,12 @@ public class Main extends Activity {
 					}
 				}
 			});
+		} catch (Exception e) {
+			log.error("Log attempt failed", e);
+			Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT)
+					.show();
+
+			mSpinner.dismiss();
 		}
 	}
 }
