@@ -3,28 +3,58 @@ package ca.setc.config;
 import ca.setc.parse.User;
 import android.content.SharedPreferences;
 
+/**
+ * User preferences
+ */
 public final class Preferences {
 	
+	/** The settings. */
 	private static SharedPreferences settings;
+	
+	/** The current user. */
 	private static User currentUser;
 	
+	/**
+	 * Instantiates a new preferences.
+	 */
 	private Preferences(){}
 	
+	/**
+	 * Sets the shared preferences.
+	 *
+	 * @param settings the new shared preferences
+	 */
 	public static void setSharedPreferences(SharedPreferences settings)
 	{
 		Preferences.settings = settings;
 	}
 	
+	/**
+	 * Sets the current user.
+	 *
+	 * @param user the new current user
+	 */
 	public static void setCurrentUser(User user)
 	{
 		currentUser = user;
 	}
 	
+	/**
+	 * Gets the current user.
+	 *
+	 * @return the current user
+	 */
 	public static User getCurrentUser()
 	{
 		return currentUser;
 	}
 	
+	/**
+	 * Gets the string preference based on key.
+	 *
+	 * @param key the key
+	 * @return the string
+	 */
 	public static String get(String key)
 	{
 		if(settings != null)
@@ -34,6 +64,12 @@ public final class Preferences {
 		return null;
 	}
 	
+	/**
+	 * Sets a string preference.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	public static void set(String key, String value)
 	{
 		if(settings != null)
@@ -44,6 +80,12 @@ public final class Preferences {
 		}
 	}
 	
+	/**
+	 * Sets a boolean preferences
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	public static void setBoolean(String key, boolean value)
 	{
 		if(settings != null)
@@ -54,14 +96,19 @@ public final class Preferences {
 		}
 	}
 	
-	public static Boolean getBoolean(String key, boolean defVal)
+	/**
+	 * Gets a boolean preference
+	 *
+	 * @param key the key
+	 * @param defVal the default value
+	 * @return the boolean
+	 */
+	public static boolean getBoolean(String key, boolean defVal)
 	{
 		if(settings != null)
 		{
 			return settings.getBoolean(key, defVal);
 		}
 		return defVal;
-		
 	}
-	
 }

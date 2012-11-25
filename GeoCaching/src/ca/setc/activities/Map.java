@@ -17,7 +17,7 @@ import ca.setc.config.Preferences;
 import ca.setc.dialogs.TwitterDialog;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
-import ca.setc.geocaching.events.DesinationChangedEvent;
+import ca.setc.geocaching.events.DestinationChangedEvent;
 import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
@@ -28,17 +28,29 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.parse.ParseObject;
 
+/**
+ * Map activity. Displays the distance and bearing to a destination
+ */
 public class Map extends MapActivity implements LocationChangedListener, DestinationChangedListener{
 
+	/** The gps. */
 	private GPS gps = GPS.getInstance();
+	
+	/** The MapController. */
 	private MapController mc;
 	
+	/** The destination. */
 	private static ParseObject destination;
 	
-	private static final double LOGBOOK_RANGE = 5.0;
+	/** Maximum disatance from the destination a user is allowed to view and sign the logbook*/
+	private static final double LOGBOOK_RANGE = 2.5;
 
+	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(Map.class);
 	
+    /* (non-Javadoc)
+     * @see com.google.android.maps.MapActivity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +71,18 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
         gps.setLocationManager(lm);
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_map, menu);
         return true;
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -79,11 +97,17 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
         }
     }
 
+	/* (non-Javadoc)
+	 * @see com.google.android.maps.MapActivity#isRouteDisplayed()
+	 */
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.setc.geocaching.events.LocationChangedListener#locationChanged(ca.setc.geocaching.events.LocationChangedEvent)
+	 */
 	public void locationChanged(LocationChangedEvent event) {
 		GeoLocation location = event.getLocation();
 		log.debug("Location changed. Lat: {}, Long: {}", location.getLatitude(), location.getLongitude());
@@ -95,6 +119,11 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 	}
 	
 
+	/**
+	 * Handles button clicks
+	 *
+	 * @param v the view of the clicked item
+	 */
 	public void onClick(View v) {
 
 		log.debug("Button Clicked. Id: {}", v.getId());
@@ -126,18 +155,25 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
     		{
     			String m = String.format(getString(R.string.tweet),new GeoLocation(Map.destination.getParseGeoPoint("location")));
         		new TwitterDialog(this,"http://twitter.com/?status="+Uri.encode(m)).show();
-        		
-        		
     		}
 		}
 	}
 
-	public void destinationChanged(DesinationChangedEvent event) {
+	/* (non-Javadoc)
+	 * @see ca.setc.geocaching.events.DestinationChangedListener#destinationChanged(ca.setc.geocaching.events.DesinationChangedEvent)
+	 */
+	public void destinationChanged(DestinationChangedEvent event) {
 		GeoLocation dest = event.getDestination();
 		log.debug("Destination changed. Lat: {}, Long: {}", dest.getLatitude(), dest.getLongitude());
 		updateDisplay(gps.getCurrentLocation(), dest);
 	}
 	
+	/**
+	 * Update display.
+	 *
+	 * @param location the location
+	 * @param destination the destination
+	 */
 	private void updateDisplay(GeoLocation location, GeoLocation destination)
 	{
 
@@ -160,14 +196,10 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 		if(metres <= LOGBOOK_RANGE)
 		{
 			showLogBookButtons(true);
-	        MapView mapView = (MapView) findViewById(R.id.mapview);
-	        mapView.setBuiltInZoomControls(false);
 		}
 		else
 		{
 			showLogBookButtons(false);
-	        MapView mapView = (MapView) findViewById(R.id.mapview);
-	        mapView.setBuiltInZoomControls(true);
 		}
 		
 		String bearing = GPS.bearingToString(gps.getBearing(location));
@@ -180,6 +212,11 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 		distance.setText(distanceText + " " + bearing);
 	}
 	
+	/**
+	 * Toggles logbook buttons
+	 *
+	 * @param show the show
+	 */
 	private void showLogBookButtons(boolean show)
 	{
 		Button viewLogBook = (Button)findViewById(R.id.btn_view_logbook);
@@ -191,6 +228,8 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 			viewLogBook.setClickable(true);
 			signLogBook.setVisibility(View.VISIBLE);
 			signLogBook.setClickable(true);
+	        MapView mapView = (MapView) findViewById(R.id.mapview);
+	        mapView.setBuiltInZoomControls(false);
 		}
 		else
 		{
@@ -198,6 +237,8 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
 			viewLogBook.setClickable(false);
 			signLogBook.setVisibility(View.INVISIBLE);
 			signLogBook.setClickable(false);
+	        MapView mapView = (MapView) findViewById(R.id.mapview);
+	        mapView.setBuiltInZoomControls(true);
 		}
 	}
 }

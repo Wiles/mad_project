@@ -14,10 +14,14 @@ public final class ConfigureLog4J {
 	
 	private ConfigureLog4J(){}
 	
+	
+    /**
+     * Creates the inital setup for log4j
+     */
     public static void configure() {
         final LogConfigurator logConfigurator = new LogConfigurator();
                 
-        logConfigurator.setFileName(Environment.getExternalStorageDirectory() + File.separator + "myapp.log");
+        logConfigurator.setFileName(Environment.getExternalStorageDirectory() + File.separator + "geocaching.log");
         logConfigurator.setRootLevel(Level.ALL);
         logConfigurator.setImmediateFlush(true);
         logConfigurator.setMaxBackupSize(DEFAULT_FILE_COUNT);

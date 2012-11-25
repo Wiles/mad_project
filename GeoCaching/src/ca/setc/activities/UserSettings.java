@@ -9,8 +9,14 @@ import android.widget.RadioButton;
 import ca.setc.config.Preferences;
 import ca.setc.geocaching.R;
 
+/**
+ * Allows a user to manager there settings
+ */
 public class UserSettings extends Activity {
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +42,20 @@ public class UserSettings extends Activity {
         
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_user_settings, menu);
         return true;
     }
     
+    /**
+     * Handles button clicks
+     *
+     * @param v the v
+     */
     public void onClick(View v)
     {
     	switch(v.getId()){

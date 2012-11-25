@@ -18,10 +18,17 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+/**
+ * View the logbook
+ */
 public class LogBookActivity extends Activity {
 
+	/** The entries. */
 	private List<ParseObject> entries = new ArrayList<ParseObject>(); 
 	
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +54,19 @@ public class LogBookActivity extends Activity {
         });
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
     
+    /**
+     * Load entries for viewing
+     *
+     * @param entryList the entry list
+     */
     private void loadEntries(List<ParseObject> entryList)
     {
 				entries.clear();

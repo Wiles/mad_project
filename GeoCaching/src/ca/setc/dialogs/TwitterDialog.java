@@ -1,9 +1,3 @@
-/**
- * Code provided by:
- * 
- * http://stackoverflow.com/questions/1782743/twitter-integration-on-android-app
- */
-
 package ca.setc.dialogs;
 
 import org.slf4j.Logger;
@@ -28,32 +22,72 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import ca.setc.geocaching.R;
 
+/**
+ * Dialog to tweet messages.
+ * 
+ * Code based on answer found on Stack-Overflow:
+ * http://stackoverflow.com/questions/1782743/twitter-integration-on-android-app
+ */
 public class TwitterDialog extends Dialog {
 
+	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(TwitterDialog.class);
 
+	/** The Constant MAGIC. */
 	private final static float MAGIC = 0.5f;
+	
+	/** The Constant BLUE. */
 	static final int BLUE = 0xFF6D84B4;
+	
+	/** The Constant DIMENSIONS_DIFF_LANDSCAPE. */
 	static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
+	
+	/** The Constant DIMENSIONS_DIFF_PORTRAIT. */
 	static final float[] DIMENSIONS_DIFF_PORTRAIT = { 40, 60 };
+	
+	/** The Constant FILL. */
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.FILL_PARENT,
 			ViewGroup.LayoutParams.FILL_PARENT);
+	
+	/** The Constant MARGIN. */
 	static final int MARGIN = 4;
+	
+	/** The Constant PADDING. */
 	static final int PADDING = 2;
+	
+	/** The Constant DISPLAY_STRING. */
 	static final String DISPLAY_STRING = "touch";
 
+	/** The  url. */
 	private String mUrl;
+	
+	/** Them spinner. */
 	private ProgressDialog mSpinner;
+	
+	/** The  web view. */
 	private WebView mWebView;
+	
+	/** The  content. */
 	private LinearLayout mContent;
+	
+	/** The title. */
 	private TextView mTitle;
 
+	/**
+	 * Instantiates a new twitter dialog.
+	 *
+	 * @param context the context
+	 * @param url the url
+	 */
 	public TwitterDialog(Context context, String url) {
 		super(context);
 		mUrl = url;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Dialog#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +111,9 @@ public class TwitterDialog extends Dialog {
 						.getHeight() - ((int) (dimensions[1] * scale + MAGIC))));
 	}
 
+	/**
+	 * Sets the title.
+	 */
 	private void setUpTitle() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Drawable icon = getContext().getResources().getDrawable(
@@ -92,6 +129,9 @@ public class TwitterDialog extends Dialog {
 		mContent.addView(mTitle);
 	}
 
+	/**
+	 * Sets the web view.
+	 */
 	private void setUpWebView() {
 		mWebView = new WebView(getContext());
 		mWebView.setVerticalScrollBarEnabled(false);
@@ -105,14 +145,23 @@ public class TwitterDialog extends Dialog {
 		mContent.addView(mWebView);
 	}
 
+	/**
+	 * WebClient
+	 */
 	private class DialogWebViewClient extends WebViewClient {
 
+		/* (non-Javadoc)
+		 * @see android.webkit.WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView, java.lang.String)
+		 */
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			view.loadUrl(url);
 			return true;
 		}
 
+		/* (non-Javadoc)
+		 * @see android.webkit.WebViewClient#onReceivedError(android.webkit.WebView, int, java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
@@ -120,12 +169,18 @@ public class TwitterDialog extends Dialog {
 			TwitterDialog.this.dismiss();
 		}
 
+		/* (non-Javadoc)
+		 * @see android.webkit.WebViewClient#onPageStarted(android.webkit.WebView, java.lang.String, android.graphics.Bitmap)
+		 */
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
 			mSpinner.show();
 		}
 
+		/* (non-Javadoc)
+		 * @see android.webkit.WebViewClient#onPageFinished(android.webkit.WebView, java.lang.String)
+		 */
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);

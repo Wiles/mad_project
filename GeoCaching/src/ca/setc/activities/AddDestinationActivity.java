@@ -16,9 +16,17 @@ import ca.setc.geocaching.R;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+/**
+ * Activity to create and shair a new Destination
+ */
 public class AddDestinationActivity extends Activity {
+	
+	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(AddDestinationActivity.class);
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +38,19 @@ public class AddDestinationActivity extends Activity {
         lng.setText(Double.toString(GPS.getInstance().getCurrentLocation().getLongitude()));
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
     
+    /**
+     * Handles button clicks
+     *
+     * @param v the v
+     */
     public void onClick(View v) {
 
 		log.debug("Button Clicked. Id: {}", v.getId());

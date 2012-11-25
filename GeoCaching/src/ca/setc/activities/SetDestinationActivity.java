@@ -27,20 +27,28 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+/**
+ * Activity to select a destination from a list
+ */
 public class SetDestinationActivity extends Activity {
 	
 
+	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(SetDestinationActivity.class);
 
+	/** The locations. */
 	private List<ParseObject> locations = new ArrayList<ParseObject>(); 
 	
-	private SetDestinationActivity that = this;
-	
+	/** The Constant MAX_DESTINATION. */
 	private static final int MAX_DESTINATION = 10;
 	
 
+	/** The m spinner. */
 	private ProgressDialog mSpinner;
 	
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,20 +60,29 @@ public class SetDestinationActivity extends Activity {
         loadNear();
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
     
+    /**
+     * TODO
+     *
+     * @param l the l
+     * @param v the v
+     * @param position the position
+     * @param id the id
+     */
     public void onListItemClick(ListView l, View v, int position, long id) {
         log.info("Destination selected: {}", position);
     }
-    
-    private void dones()
-    {
-    	finish();
-    }
         
+    /**
+     * Load the closest point for display
+     */
     private void loadNear()
     {
     	ParseGeoPoint userLocation = Preferences.getCurrentUser().getCurrentLocation().toParseGeoPoint();
@@ -94,14 +111,17 @@ public class SetDestinationActivity extends Activity {
 					GeoLocation curr = Preferences.getCurrentUser().getCurrentLocation();
 					str[i] = String.format("%s %s - %s", GPS.distanceToText(curr.getDistance(dest)), GPS.bearingToString(curr.getBearing(dest)), obj.get("description"));
 				}
-				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(that, android.R.layout.simple_list_item_1, android.R.id.text1, str);
+				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(SetDestinationActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, str);
 				lv.setAdapter(adapter);
 				lv.setOnItemClickListener(new OnItemClickListener() {
 
+					/* (non-Javadoc)
+					 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+					 */
 					public void onItemClick(AdapterView<?> adater, View view,
 							int position, long id) {
 						GPS.getInstance().setDestination(new GeoLocation ((ParseGeoPoint)locations.get(position).get("location")));
-						dones();
+						SetDestinationActivity.this.finish();
 					}
 				});
 		    	mSpinner.dismiss();

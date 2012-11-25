@@ -32,19 +32,32 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+/**
+ * The Class Main.
+ */
 public class Main extends Activity {
 	
+	/** The  splash dialog. */
 	private Dialog mSplashDialog;
+	
+	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(Main.class);
 
+	/** The Constant SPASH_DURATION. */
 	private static final int SPASH_DURATION = 3000;
 	
+	/** The Constant PASSWORD. */
 	private static final String PASSWORD = "Password";
 
+	/** The spinner progress. */
 	private ProgressDialog mSpinner;
 	
+	/** The original UncountExceptionHandler. */
 	private UncaughtExceptionHandler originalUEH;
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +74,9 @@ public class Main extends Activity {
 		
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
+			/* (non-Javadoc)
+			 * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
+			 */
 			public void uncaughtException(Thread thread, Throwable ex) {
 				log.error("Unhandled Exception", ex);
 				Preferences.setBoolean("UncleanShutdown", true);
@@ -86,11 +102,17 @@ public class Main extends Activity {
 		showSplashScreen();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return false;
 	}
 
+	/**
+	 * Removes the splash screen.
+	 */
 	protected void removeSplashScreen() {
 		log.debug("removing splashscreen");
 		if (mSplashDialog != null) {
@@ -99,11 +121,17 @@ public class Main extends Activity {
 		}
 	}
 
+	/**
+	 * Show map screen.
+	 */
 	protected void showMapScreen() {
 		Intent intent = new Intent(this, Map.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * Show login.
+	 */
 	protected void showLogin() {
 		setContentView(R.layout.login);
 		
@@ -130,6 +158,9 @@ public class Main extends Activity {
 		}
 	}
 
+	/**
+	 * Show splash screen.
+	 */
 	protected void showSplashScreen() {
 		log.debug("Showing splashscreen");
 		mSplashDialog = new Dialog(this, R.layout.splashscreen);
@@ -140,6 +171,10 @@ public class Main extends Activity {
 		// Set Runnable to remove splash screen just in case
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
+			
+			/* (non-Javadoc)
+			 * @see java.lang.Runnable#run()
+			 */
 			public void run() {
 				removeSplashScreen();
 				showLogin();
@@ -147,6 +182,11 @@ public class Main extends Activity {
 		}, SPASH_DURATION);
 	}
 
+	/**
+	 * On click.
+	 *
+	 * @param v the v
+	 */
 	public void onClick(View v) {
 
 		boolean remember = ((CheckBox) findViewById(R.id.cb_remember))
@@ -177,6 +217,11 @@ public class Main extends Activity {
 				mSpinner.show();
 				ParseUser.logInInBackground(username, pass,
 						new LogInCallback() {
+							
+							/* (non-Javadoc)
+							 * @see com.parse.LogInCallback#done(com.parse.ParseUser, com.parse.ParseException)
+							 */
+							@Override
 							public void done(ParseUser user, ParseException e) {
 								if (user != null) {
 									Analytics.send("login");
@@ -232,6 +277,10 @@ public class Main extends Activity {
 			pUser.setEmail(email.getText().toString());
 			mSpinner.show();
 			pUser.signUpInBackground(new SignUpCallback() {
+				
+				/* (non-Javadoc)
+				 * @see com.parse.SignUpCallback#done(com.parse.ParseException)
+				 */
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {

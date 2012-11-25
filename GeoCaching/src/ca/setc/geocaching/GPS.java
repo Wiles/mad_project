@@ -12,12 +12,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import ca.setc.config.Preferences;
-import ca.setc.geocaching.events.DesinationChangedEvent;
+import ca.setc.geocaching.events.DestinationChangedEvent;
 import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
 import ca.setc.parse.GeoLocation;
 
+/**
+ * The Class GPS. Abstracts the Android GPS implementation.
+ */
 public final class GPS {
 	
 	private static final double FEET_IN_METRE = 3.28084;
@@ -48,6 +51,11 @@ public final class GPS {
 	
 	private GPS(){}
 	
+	/**
+	 * Get the singleton GPS instance
+	 * 
+	 * @return singleton GPS
+	 */
 	public static GPS getInstance()
 	{
 		if(instance == null)
@@ -57,6 +65,11 @@ public final class GPS {
 		return instance;
 	}
 	
+	/**
+	 * Set the location manager to use
+	 * 
+	 * @param lm location manager
+	 */
 	public void setLocationManager(LocationManager lm)
 	{
 		if(this.lm != null)
@@ -67,36 +80,65 @@ public final class GPS {
         this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
 	}
 	
+	/**
+	 * Set the current location independently of GPS updates
+	 * 
+	 * @param location of the user
+	 */
 	public void setCurrentLocation(GeoLocation location)
 	{
 		ll.onLocationChanged(location.toLocation());
 	}
 	
+	/**
+	 * Get the current location of the device
+	 * 
+	 * @return current location
+	 */
 	public GeoLocation getCurrentLocation()
 	{
 		return currentLocation;
 	}
 	
+	/**
+	 * Get the current target destination of the GPS
+	 * 
+	 * @return the destination
+	 */
 	public GeoLocation getDestination()
 	{
 		return destination;
 	}
 	
+	/**
+	 * Set the destination for the GPS
+	 * 
+	 * @param destination of the GPS
+	 */
 	public void setDestination(GeoLocation destination)
 	{
 		this.destination = destination;
 		for(DestinationChangedListener listener : destinationChangedListeners)
 		{
-			listener.destinationChanged(new DesinationChangedEvent(destination));
+			listener.destinationChanged(new DestinationChangedEvent(destination));
 		}
 	}
 	
+	/**
+	 * Add a listener for when the location changes
+	 * 
+	 * @param listener location changed
+	 */
 	public void addLocationChangedListener(LocationChangedListener listener)
 	{
 		locationChangedListeners.add(listener);
 	}
 	
 	private class LL implements LocationListener {
+		
+		/* (non-Javadoc)
+		 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+		 */
 		public void onLocationChanged(Location location) {
 			log.debug("Location changed. lat:{}, long:{}", location.getLatitude(), location.getLongitude());
 			currentLocation = new GeoLocation(location);
@@ -106,16 +148,31 @@ public final class GPS {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+		 */
 		public void onProviderDisabled(String provider) {			
 		}
 
+		/* (non-Javadoc)
+		 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+		 */
 		public void onProviderEnabled(String provider) {			
 		}
 
+		/* (non-Javadoc)
+		 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+		 */
 		public void onStatusChanged(String provider, int status, Bundle extras) {			
 		}
 	}
 
+	/**
+	 * Get the distance in metres from the destination 
+	 * 
+	 * @param location from destination
+	 * @return distance in metres, 0 if no current destination
+	 */
 	public Double getDistance(GeoLocation location) {
 		if(this.destination == null || location == null)
 		{
@@ -124,6 +181,12 @@ public final class GPS {
 		return (double) location.getDistance(destination);
 	}
 
+	/**
+	 * Get the bearing to the current destination
+	 * 
+	 * @param location
+	 * @return the bearing, 0 if no current destination
+	 */
 	public double getBearing(GeoLocation location) {
 		if(this.destination == null || location == null){
 			return 0.0;
@@ -131,6 +194,12 @@ public final class GPS {
 		return location.getBearing(destination);
 	}
 	
+	/**
+	 * Returns a cardinal point representing the bearing
+	 * 
+	 * @param bearing
+	 * @return cardinal point
+	 */
 	public static String bearingToString(double bearing)
 	{
 		Double fixedBearing = bearing;
@@ -162,6 +231,17 @@ public final class GPS {
 		return fixedBearing.toString();
 	}
 	
+	/**
+	 * Changes distance in metre into formatted text.
+	 * 
+	 * Takes unit prefernece into account.
+	 * 
+	 * Uses ft/m for anything less than 1 kilometre/mile
+	 * uses kilometre/miles for anything at or above that
+	 * 
+	 * @param metres distance
+	 * @return formatted distance string
+	 */
 	public static String distanceToText(double metres)
 	{
 		boolean imperial = "imperial".equals(Preferences.get("units"));
@@ -200,6 +280,11 @@ public final class GPS {
 		
 	}
 
+	/**
+	 * Add a listener for when the destination changes
+	 * 
+	 * @param listener for destination change
+	 */
 	public void addDestinationChangedListener(DestinationChangedListener listener) {
 		destinationChangedListeners.add(listener);
 	}

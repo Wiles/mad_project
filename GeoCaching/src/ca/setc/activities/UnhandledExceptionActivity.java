@@ -11,10 +11,20 @@ import ca.setc.geocaching.R;
 
 import com.parse.ParseObject;
 
+
+/**
+ * Used to inform the user of an un-handled
+ * exception and allow them to post the
+ * error to the parse server
+ */
 public class UnhandledExceptionActivity extends Activity {
 
+	/** The error message. */
 	private String errorMessage;
 	
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +34,19 @@ public class UnhandledExceptionActivity extends Activity {
         view.setText(errorMessage);
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
     
+    /**
+     * Handles button clicks
+     *
+     * @param v the v
+     */
     public void onClick(View v)
     {
     	if(v.getId() == R.id.btn_yes)
