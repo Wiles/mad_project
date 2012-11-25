@@ -44,7 +44,7 @@ public class LogBookActivity extends Activity {
 		
 		ParseQuery query = new ParseQuery("LogEntry");
 		query.whereEqualTo("destination", Preferences.getDestination());
-		query.orderByAscending("createdAt");
+		query.orderByDescending("createdAt");
 		query.findInBackground(new FindCallback() {
 
 			@Override
