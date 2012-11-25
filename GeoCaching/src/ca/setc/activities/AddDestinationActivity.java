@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -77,13 +78,19 @@ public class AddDestinationActivity extends Activity {
 						Double.parseDouble(lat.getText().toString()),
 						Double.parseDouble(lng.getText().toString()));
 				parse.put("location", location);
-				parse.save();
+				parse.saveInBackground();
 				finish();
 			} catch (Exception ex) {
 				log.error("Create desination failed: {}", ex.getMessage());
 
 				Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
 			}
+		} 
+		else if (v.getId() == R.id.btn_image)
+		{
+			log.debug("Entering add image event");
+			Intent intent = new Intent(this, TakePictureActivity.class);
+			startActivity(intent);
 		}
 	}
 }

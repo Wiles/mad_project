@@ -42,5 +42,10 @@
     <string name="select_dest">Please select a destination</string>
     <string name="thank_you">Thank you</string>
     <string name="destination_description" formatted="false">Distance: %s %s%n%nDescription: %s</string>
+    <string name="add_picture">Add Picture</string>
+    <string name="image_content_description">Image of the geocache location</string>
+    <string name="create_cache">Create Cache</string>
+    <string name="title_activity_take_picture">Destination Picture</string>
+    <string name="capture">Capture</string>
 
 </resources>

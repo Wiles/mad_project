@@ -272,7 +272,6 @@ public class Main extends Activity {
 
 			mSpinner.dismiss();
 		}
-
 	}
 
 	/**
