@@ -3,51 +3,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-	<EditText
-	    android:id="@+id/et_username"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:hint="@string/username" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/et_username"
+        android:contentDescription="@string/take_a_hike"
+        android:src="@drawable/icon" />
 
-		<requestFocus />
-	</EditText>
-
-	<EditText
-	    android:id="@+id/et_password"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:hint="@string/password"
-	    android:inputType="textPassword" />
-
-	<CheckBox
-	    android:id="@+id/cb_remember"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/remember" />
-
-	<Button
-	    android:id="@+id/btn_login"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:onClick="onClick"
-	    android:text="@string/login" />
-
-	<EditText
-	    android:id="@+id/et_email"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:hint="@string/email"
-	    android:onClick="onClick" />
-
 	<Button
 	    android:id="@+id/btn_signup"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
 	    android:onClick="onClick"
 	    android:text="@string/signup" />
+
+	<EditText
+	    android:id="@+id/et_email"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/btn_signup"
+	    android:layout_alignParentLeft="true"
+	    android:ems="10"
+	    android:hint="@string/email"
+	    android:onClick="onClick" />
+
+	<Button
+	    android:id="@+id/btn_login"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/et_email"
+	    android:layout_alignParentLeft="true"
+	    android:onClick="onClick"
+	    android:text="@string/login" />
+
+	<CheckBox
+	    android:id="@+id/cb_remember"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/btn_login"
+	    android:layout_alignParentLeft="true"
+	    android:text="@string/remember" />
+
+	<EditText
+	    android:id="@+id/et_password"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/cb_remember"
+	    android:layout_alignParentLeft="true"
+	    android:ems="10"
+	    android:hint="@string/password"
+	    android:inputType="textPassword" />
+
+	<EditText
+	    android:id="@+id/et_username"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/et_password"
+	    android:layout_alignParentLeft="true"
+	    android:ems="10"
+	    android:hint="@string/username" />
 
 </RelativeLayout>
