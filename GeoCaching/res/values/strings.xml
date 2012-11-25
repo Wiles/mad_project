@@ -34,12 +34,13 @@
     <string name="message">Message</string>
     <string name="sign">sign</string>
     <string name="error">error</string>
-    <string name="tweet">I just visited a Geocache a %s</string>
+    <string name="tweet" formatted="false">I just visited a Geocache a %s</string>
     <string name="no_message">Please enter a message</string>
     <string name="retrieve_entry_failure"> "Could not retrieve log entries"</string>
     <string name="unknown_user">Unknown</string>
     <string name="await_gps">Awaiting GPS information…</string>
     <string name="select_dest">Please select a destination</string>
     <string name="thank_you">Thank you</string>
+    <string name="destination_description" formatted="false">Distance: %s %s%n%nDescription: %s</string>
 
 </resources>

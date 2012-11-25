@@ -115,7 +115,7 @@ public class SetDestinationActivity extends Activity {
 							.get("location"));
 					GeoLocation curr = Preferences.getCurrentUser()
 							.getCurrentLocation();
-					str[i] = String.format("%s %s - %s",
+					str[i] = String.format(getString(R.string.destination_description),
 							GPS.distanceToText(curr.getDistance(dest)),
 							GPS.bearingToString(curr.getBearing(dest)),
 							obj.get("description"));
