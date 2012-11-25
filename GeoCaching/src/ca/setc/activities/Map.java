@@ -26,7 +26,6 @@ import ca.setc.parse.GeoLocation;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.parse.ParseObject;
 
 /**
  * Map activity. Displays the distance and bearing to a destination
@@ -34,18 +33,15 @@ import com.parse.ParseObject;
 public class Map extends MapActivity implements LocationChangedListener,
 		DestinationChangedListener {
 
-	/** The gps. */
+	/** The GPS. */
 	private GPS gps = GPS.getInstance();
 
 	/** The MapController. */
 	private MapController mc;
 
-	/** The destination. */
-	private static ParseObject destination;
-
 	/**
-	 * Maximum disatance from the destination a user is allowed to view and sign
-	 * the logbook
+	 * Maximum distance from the destination a user is allowed to view and sign
+	 * the log book
 	 */
 	private static final double LOGBOOK_RANGE = 2.5;
 
@@ -165,8 +161,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 			if (!Preferences.getBoolean("twitter_disabled", false)) {
 				String m = String.format(
 						getString(R.string.tweet),
-						new GeoLocation(Map.destination
-								.getParseGeoPoint("location")));
+						gps.getDestination());
 				new TwitterDialog(this, "http://twitter.com/?status="
 						+ Uri.encode(m)).show();
 			}

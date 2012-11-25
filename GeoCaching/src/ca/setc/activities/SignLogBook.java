@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
-import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 
 import com.parse.ParseObject;
@@ -57,7 +56,7 @@ public class SignLogBook extends Activity {
 
 			ParseObject parse = new ParseObject("LogEntry");
 			parse.put("user", Preferences.getCurrentUser().toParseUser());
-			parse.put("destination", GPS.getInstance().getDestination());
+			parse.put("destination", Preferences.getDestination());
 			parse.put("message", msg);
 			parse.saveInBackground();
 			finish();

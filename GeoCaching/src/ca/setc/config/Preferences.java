@@ -1,5 +1,7 @@
 package ca.setc.config;
 
+import com.parse.ParseObject;
+
 import ca.setc.parse.User;
 import android.content.SharedPreferences;
 
@@ -13,6 +15,9 @@ public final class Preferences {
 
 	/** The current user. */
 	private static User currentUser;
+	
+	/** The destination parse object*/
+	private static ParseObject destination;
 
 	/**
 	 * Instantiates a new preferences.
@@ -47,6 +52,21 @@ public final class Preferences {
 	 */
 	public static User getCurrentUser() {
 		return currentUser;
+	}
+	
+	/**
+	 * Sets the destination.
+	 *
+	 * @return the parses the object
+	 */
+	public static void setDestination(ParseObject destination)
+	{
+		Preferences.destination = destination;
+	}
+	
+	public static ParseObject getDestination()
+	{
+		return destination;
 	}
 
 	/**

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import ca.setc.geocaching.GPS;
+import ca.setc.config.Preferences;
 import ca.setc.geocaching.R;
 
 import com.parse.FindCallback;
@@ -26,6 +27,9 @@ public class LogBookActivity extends Activity {
 	/** The entries. */
 	private List<ParseObject> entries = new ArrayList<ParseObject>();
 
+	/** The m spinner. */
+	private ProgressDialog mSpinner;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -36,8 +40,10 @@ public class LogBookActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_book);
 
+		mSpinner = ProgressDialog.show(this, "", getString(R.string.loading));
+		
 		ParseQuery query = new ParseQuery("LogEntry");
-		query.whereEqualTo("destination", GPS.getInstance().getDestination());
+		query.whereEqualTo("destination", Preferences.getDestination());
 		query.orderByAscending("createdAt");
 		query.findInBackground(new FindCallback() {
 
@@ -91,5 +97,6 @@ public class LogBookActivity extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1, str);
 		lv.setAdapter(adapter);
+		mSpinner.dismiss();
 	}
 }

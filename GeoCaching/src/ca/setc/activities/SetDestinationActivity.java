@@ -140,6 +140,7 @@ public class SetDestinationActivity extends Activity {
 						GPS.getInstance().setDestination(
 								new GeoLocation((ParseGeoPoint) locations.get(
 										position).get("location")));
+						Preferences.setDestination(locations.get(position));
 						SetDestinationActivity.this.finish();
 					}
 				});
