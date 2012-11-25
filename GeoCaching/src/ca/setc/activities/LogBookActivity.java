@@ -3,6 +3,8 @@ package ca.setc.activities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ocpsoft.pretty.time.PrettyTime;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -29,6 +31,9 @@ public class LogBookActivity extends Activity {
 
 	/** The m spinner. */
 	private ProgressDialog mSpinner;
+	
+	/** Date formatter for social media like formats*/
+	private PrettyTime prettyTime = new PrettyTime();
 	
 	/*
 	 * (non-Javadoc)
@@ -91,8 +96,7 @@ public class LogBookActivity extends Activity {
 			} catch (ParseException ignore) {
 				// ignore
 			}
-			str[i] = String.format("%s %s - %s", obj.getCreatedAt()
-					.toLocaleString(), username, obj.getString("message"));
+			str[i] = String.format("%s %s%n---%n%s", username, prettyTime.format(obj.getCreatedAt()), obj.getString("message"));
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1, str);
