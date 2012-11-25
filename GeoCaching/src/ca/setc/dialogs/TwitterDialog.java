@@ -35,57 +35,61 @@ public class TwitterDialog extends Dialog {
 
 	/** The Constant MAGIC. */
 	private final static float MAGIC = 0.5f;
-	
+
 	/** The Constant BLUE. */
 	static final int BLUE = 0xFF6D84B4;
-	
+
 	/** The Constant DIMENSIONS_DIFF_LANDSCAPE. */
 	static final float[] DIMENSIONS_DIFF_LANDSCAPE = { 20, 60 };
-	
+
 	/** The Constant DIMENSIONS_DIFF_PORTRAIT. */
 	static final float[] DIMENSIONS_DIFF_PORTRAIT = { 40, 60 };
-	
+
 	/** The Constant FILL. */
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.FILL_PARENT,
 			ViewGroup.LayoutParams.FILL_PARENT);
-	
+
 	/** The Constant MARGIN. */
 	static final int MARGIN = 4;
-	
+
 	/** The Constant PADDING. */
 	static final int PADDING = 2;
-	
+
 	/** The Constant DISPLAY_STRING. */
 	static final String DISPLAY_STRING = "touch";
 
-	/** The  url. */
+	/** The url. */
 	private String mUrl;
-	
+
 	/** Them spinner. */
 	private ProgressDialog mSpinner;
-	
-	/** The  web view. */
+
+	/** The web view. */
 	private WebView mWebView;
-	
-	/** The  content. */
+
+	/** The content. */
 	private LinearLayout mContent;
-	
+
 	/** The title. */
 	private TextView mTitle;
 
 	/**
 	 * Instantiates a new twitter dialog.
-	 *
-	 * @param context the context
-	 * @param url the url
+	 * 
+	 * @param context
+	 *            the context
+	 * @param url
+	 *            the url
 	 */
 	public TwitterDialog(Context context, String url) {
 		super(context);
 		mUrl = url;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Dialog#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -150,8 +154,12 @@ public class TwitterDialog extends Dialog {
 	 */
 	private class DialogWebViewClient extends WebViewClient {
 
-		/* (non-Javadoc)
-		 * @see android.webkit.WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView, java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.webkit.WebViewClient#shouldOverrideUrlLoading(android.webkit
+		 * .WebView, java.lang.String)
 		 */
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -159,8 +167,12 @@ public class TwitterDialog extends Dialog {
 			return true;
 		}
 
-		/* (non-Javadoc)
-		 * @see android.webkit.WebViewClient#onReceivedError(android.webkit.WebView, int, java.lang.String, java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.webkit.WebViewClient#onReceivedError(android.webkit.WebView,
+		 * int, java.lang.String, java.lang.String)
 		 */
 		@Override
 		public void onReceivedError(WebView view, int errorCode,
@@ -169,8 +181,12 @@ public class TwitterDialog extends Dialog {
 			TwitterDialog.this.dismiss();
 		}
 
-		/* (non-Javadoc)
-		 * @see android.webkit.WebViewClient#onPageStarted(android.webkit.WebView, java.lang.String, android.graphics.Bitmap)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.webkit.WebViewClient#onPageStarted(android.webkit.WebView,
+		 * java.lang.String, android.graphics.Bitmap)
 		 */
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -178,8 +194,12 @@ public class TwitterDialog extends Dialog {
 			mSpinner.show();
 		}
 
-		/* (non-Javadoc)
-		 * @see android.webkit.WebViewClient#onPageFinished(android.webkit.WebView, java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.webkit.WebViewClient#onPageFinished(android.webkit.WebView,
+		 * java.lang.String)
 		 */
 		@Override
 		public void onPageFinished(WebView view, String url) {

@@ -31,101 +31,120 @@ import com.parse.ParseQuery;
  * Activity to select a destination from a list
  */
 public class SetDestinationActivity extends Activity {
-	
 
 	/** The log. */
-	private final Logger log = LoggerFactory.getLogger(SetDestinationActivity.class);
+	private final Logger log = LoggerFactory
+			.getLogger(SetDestinationActivity.class);
 
 	/** The locations. */
-	private List<ParseObject> locations = new ArrayList<ParseObject>(); 
-	
+	private List<ParseObject> locations = new ArrayList<ParseObject>();
+
 	/** The Constant MAX_DESTINATION. */
 	private static final int MAX_DESTINATION = 10;
-	
 
 	/** The m spinner. */
 	private ProgressDialog mSpinner;
-	
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_destination);
-        
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_set_destination);
 
 		mSpinner = ProgressDialog.show(this, "", getString(R.string.loading));
-        
-        loadNear();
-    }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
-    }
-    
-    /**
-     * TODO
-     *
-     * @param l the l
-     * @param v the v
-     * @param position the position
-     * @param id the id
-     */
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        log.info("Destination selected: {}", position);
-    }
-        
-    /**
-     * Load the closest point for display
-     */
-    private void loadNear()
-    {
-    	ParseGeoPoint userLocation = Preferences.getCurrentUser().getCurrentLocation().toParseGeoPoint();
-    	ParseQuery query = new ParseQuery("Destination");
-    	query.whereNear("location", userLocation);
-    	query.setLimit(MAX_DESTINATION);
-    	query.findInBackground(new FindCallback() {
+		loadNear();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param l
+	 *            the l
+	 * @param v
+	 *            the v
+	 * @param position
+	 *            the position
+	 * @param id
+	 *            the id
+	 */
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		log.info("Destination selected: {}", position);
+	}
+
+	/**
+	 * Load the closest point for display
+	 */
+	private void loadNear() {
+		ParseGeoPoint userLocation = Preferences.getCurrentUser()
+				.getCurrentLocation().toParseGeoPoint();
+		ParseQuery query = new ParseQuery("Destination");
+		query.whereNear("location", userLocation);
+		query.setLimit(MAX_DESTINATION);
+		query.findInBackground(new FindCallback() {
 
 			@Override
 			public void done(List<ParseObject> arg0, ParseException arg1) {
 				locations.clear();
-				if(arg1 != null)
-				{
-					Toast.makeText(null, arg1.getMessage(),
-							Toast.LENGTH_LONG).show();
+				if (arg1 != null) {
+					Toast.makeText(null, arg1.getMessage(), Toast.LENGTH_LONG)
+							.show();
 				}
-				
-				ListView lv = (ListView)findViewById(R.id.lv_destinations);
+
+				ListView lv = (ListView) findViewById(R.id.lv_destinations);
 
 				String[] str = new String[arg0.size()];
-				for(int i = 0; i < arg0.size(); ++i)
-				{
+				for (int i = 0; i < arg0.size(); ++i) {
 					ParseObject obj = arg0.get(i);
 					locations.add(obj);
-					GeoLocation dest = new GeoLocation((ParseGeoPoint)obj.get("location"));
-					GeoLocation curr = Preferences.getCurrentUser().getCurrentLocation();
-					str[i] = String.format("%s %s - %s", GPS.distanceToText(curr.getDistance(dest)), GPS.bearingToString(curr.getBearing(dest)), obj.get("description"));
+					GeoLocation dest = new GeoLocation((ParseGeoPoint) obj
+							.get("location"));
+					GeoLocation curr = Preferences.getCurrentUser()
+							.getCurrentLocation();
+					str[i] = String.format("%s %s - %s",
+							GPS.distanceToText(curr.getDistance(dest)),
+							GPS.bearingToString(curr.getBearing(dest)),
+							obj.get("description"));
 				}
-				ArrayAdapter<String> adapter  = new ArrayAdapter<String>(SetDestinationActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, str);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						SetDestinationActivity.this,
+						android.R.layout.simple_list_item_1,
+						android.R.id.text1, str);
 				lv.setAdapter(adapter);
 				lv.setOnItemClickListener(new OnItemClickListener() {
 
-					/* (non-Javadoc)
-					 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * android.widget.AdapterView.OnItemClickListener#onItemClick
+					 * (android.widget.AdapterView, android.view.View, int,
+					 * long)
 					 */
 					public void onItemClick(AdapterView<?> adater, View view,
 							int position, long id) {
-						GPS.getInstance().setDestination(new GeoLocation ((ParseGeoPoint)locations.get(position).get("location")));
+						GPS.getInstance().setDestination(
+								new GeoLocation((ParseGeoPoint) locations.get(
+										position).get("location")));
 						SetDestinationActivity.this.finish();
 					}
 				});
-		    	mSpinner.dismiss();
+				mSpinner.dismiss();
 			}
-    	});
-    }
+		});
+	}
 }

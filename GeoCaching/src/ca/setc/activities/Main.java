@@ -36,26 +36,28 @@ import com.parse.SignUpCallback;
  * The Class Main.
  */
 public class Main extends Activity {
-	
-	/** The  splash dialog. */
+
+	/** The splash dialog. */
 	private Dialog mSplashDialog;
-	
+
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(Main.class);
 
 	/** The Constant SPASH_DURATION. */
 	private static final int SPASH_DURATION = 3000;
-	
+
 	/** The Constant PASSWORD. */
 	private static final String PASSWORD = "Password";
 
 	/** The spinner progress. */
 	private ProgressDialog mSpinner;
-	
+
 	/** The original UncountExceptionHandler. */
 	private UncaughtExceptionHandler originalUEH;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -71,11 +73,15 @@ public class Main extends Activity {
 		ConfigureLog4J.configure();
 
 		originalUEH = Thread.getDefaultUncaughtExceptionHandler();
-		
+
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
-			/* (non-Javadoc)
-			 * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java
+			 * .lang.Thread, java.lang.Throwable)
 			 */
 			public void uncaughtException(Thread thread, Throwable ex) {
 				log.error("Unhandled Exception", ex);
@@ -83,7 +89,7 @@ public class Main extends Activity {
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				ex.printStackTrace(pw);
-				Preferences.set("error-to-log",sw.toString());
+				Preferences.set("error-to-log", sw.toString());
 				originalUEH.uncaughtException(thread, ex);
 			}
 		});
@@ -102,7 +108,9 @@ public class Main extends Activity {
 		showSplashScreen();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
@@ -134,9 +142,8 @@ public class Main extends Activity {
 	 */
 	protected void showLogin() {
 		setContentView(R.layout.login);
-		
-		if(Preferences.getBoolean("UncleanShutdown", false))
-		{
+
+		if (Preferences.getBoolean("UncleanShutdown", false)) {
 			Preferences.setBoolean("UncleanShutdown", false);
 			Intent intent = new Intent(this, UnhandledExceptionActivity.class);
 			startActivity(intent);
@@ -171,8 +178,10 @@ public class Main extends Activity {
 		// Set Runnable to remove splash screen just in case
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
-			
-			/* (non-Javadoc)
+
+			/*
+			 * (non-Javadoc)
+			 * 
 			 * @see java.lang.Runnable#run()
 			 */
 			public void run() {
@@ -184,8 +193,9 @@ public class Main extends Activity {
 
 	/**
 	 * On click.
-	 *
-	 * @param v the v
+	 * 
+	 * @param v
+	 *            the v
 	 */
 	public void onClick(View v) {
 
@@ -217,9 +227,13 @@ public class Main extends Activity {
 				mSpinner.show();
 				ParseUser.logInInBackground(username, pass,
 						new LogInCallback() {
-							
-							/* (non-Javadoc)
-							 * @see com.parse.LogInCallback#done(com.parse.ParseUser, com.parse.ParseException)
+
+							/*
+							 * (non-Javadoc)
+							 * 
+							 * @see
+							 * com.parse.LogInCallback#done(com.parse.ParseUser,
+							 * com.parse.ParseException)
 							 */
 							@Override
 							public void done(ParseUser user, ParseException e) {
@@ -277,8 +291,10 @@ public class Main extends Activity {
 			pUser.setEmail(email.getText().toString());
 			mSpinner.show();
 			pUser.signUpInBackground(new SignUpCallback() {
-				
-				/* (non-Javadoc)
+
+				/*
+				 * (non-Javadoc)
+				 * 
 				 * @see com.parse.SignUpCallback#done(com.parse.ParseException)
 				 */
 				@Override

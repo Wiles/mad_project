@@ -17,48 +17,50 @@ import com.parse.ParseObject;
  */
 public class SignLogBook extends Activity {
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_log_book);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sign_log_book);
+	}
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
 
 	/**
-	 * Handles button clicks	
-	 *
-	 * @param v the v
+	 * Handles button clicks
+	 * 
+	 * @param v
+	 *            the v
 	 */
-	public void onClick(View v)
-    {
-    	if(v.getId() == R.id.btn_sign)
-    	{
-    		EditText message = (EditText)findViewById(R.id.ed_message);
-    		String msg = message.getText().toString();
-    		
-    		if(msg.length() == 0)
-    		{
+	public void onClick(View v) {
+		if (v.getId() == R.id.btn_sign) {
+			EditText message = (EditText) findViewById(R.id.ed_message);
+			String msg = message.getText().toString();
+
+			if (msg.length() == 0) {
 				Toast.makeText(this, getString(R.string.no_message),
 						Toast.LENGTH_SHORT).show();
 				return;
-    		}
-    		
-    		ParseObject parse = new ParseObject("LogEntry");
-    		parse.put("user", Preferences.getCurrentUser().toParseUser());
-    		parse.put("destination", GPS.getInstance().getDestination());
-    		parse.put("message", msg);
-    		parse.saveInBackground();
-    		finish();
-    	}
-    }
+			}
+
+			ParseObject parse = new ParseObject("LogEntry");
+			parse.put("user", Preferences.getCurrentUser().toParseUser());
+			parse.put("destination", GPS.getInstance().getDestination());
+			parse.put("message", msg);
+			parse.saveInBackground();
+			finish();
+		}
+	}
 }

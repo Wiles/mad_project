@@ -22,160 +22,168 @@ import ca.setc.parse.GeoLocation;
  * The Class GPS. Abstracts the Android GPS implementation.
  */
 public final class GPS {
-	
+
 	private static final double FEET_IN_METRE = 3.28084;
-	
+
 	private static final double DEGREES = 360.0;
-	
+
 	private static final double FEET_IN_MILE = 5280.0;
-	
+
 	private static final double METRE_IN_KILO = 1000.0;
-	
+
 	private static GPS instance;
 	private GeoLocation currentLocation;
 	private GeoLocation destination;
 	private LocationManager lm;
 	private LL ll = new LL();
-	
+
 	private List<LocationChangedListener> locationChangedListeners = new LinkedList<LocationChangedListener>();
 	private List<DestinationChangedListener> destinationChangedListeners = new LinkedList<DestinationChangedListener>();
 
 	private final Logger log = LoggerFactory.getLogger(GPS.class);
-	
-	private static String[] rosePoints = new String[]{
-		"N", "NNE", "NE", "ENE",
-		"E", "ESE", "SE", "SSE",
-		"S", "SSW", "SW", "WSW",
-		"W", "WNW", "NW", "NNW",
-		};
-	
-	private GPS(){}
-	
+
+	private static String[] rosePoints = new String[] { "N", "NNE", "NE",
+			"ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W",
+			"WNW", "NW", "NNW", };
+
+	private GPS() {
+	}
+
 	/**
 	 * Get the singleton GPS instance
 	 * 
 	 * @return singleton GPS
 	 */
-	public static GPS getInstance()
-	{
-		if(instance == null)
-		{
+	public static GPS getInstance() {
+		if (instance == null) {
 			instance = new GPS();
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * Set the location manager to use
 	 * 
-	 * @param lm location manager
+	 * @param lm
+	 *            location manager
 	 */
-	public void setLocationManager(LocationManager lm)
-	{
-		if(this.lm != null)
-		{
+	public void setLocationManager(LocationManager lm) {
+		if (this.lm != null) {
 			this.lm.removeUpdates(ll);
 		}
 		this.lm = lm;
-        this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+		this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
 	}
-	
+
 	/**
 	 * Set the current location independently of GPS updates
 	 * 
-	 * @param location of the user
+	 * @param location
+	 *            of the user
 	 */
-	public void setCurrentLocation(GeoLocation location)
-	{
+	public void setCurrentLocation(GeoLocation location) {
 		ll.onLocationChanged(location.toLocation());
 	}
-	
+
 	/**
 	 * Get the current location of the device
 	 * 
 	 * @return current location
 	 */
-	public GeoLocation getCurrentLocation()
-	{
+	public GeoLocation getCurrentLocation() {
 		return currentLocation;
 	}
-	
+
 	/**
 	 * Get the current target destination of the GPS
 	 * 
 	 * @return the destination
 	 */
-	public GeoLocation getDestination()
-	{
+	public GeoLocation getDestination() {
 		return destination;
 	}
-	
+
 	/**
 	 * Set the destination for the GPS
 	 * 
-	 * @param destination of the GPS
+	 * @param destination
+	 *            of the GPS
 	 */
-	public void setDestination(GeoLocation destination)
-	{
+	public void setDestination(GeoLocation destination) {
 		this.destination = destination;
-		for(DestinationChangedListener listener : destinationChangedListeners)
-		{
+		for (DestinationChangedListener listener : destinationChangedListeners) {
 			listener.destinationChanged(new DestinationChangedEvent(destination));
 		}
 	}
-	
+
 	/**
 	 * Add a listener for when the location changes
 	 * 
-	 * @param listener location changed
+	 * @param listener
+	 *            location changed
 	 */
-	public void addLocationChangedListener(LocationChangedListener listener)
-	{
+	public void addLocationChangedListener(LocationChangedListener listener) {
 		locationChangedListeners.add(listener);
 	}
-	
+
 	private class LL implements LocationListener {
-		
-		/* (non-Javadoc)
-		 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.location.LocationListener#onLocationChanged(android.location
+		 * .Location)
 		 */
 		public void onLocationChanged(Location location) {
-			log.debug("Location changed. lat:{}, long:{}", location.getLatitude(), location.getLongitude());
+			log.debug("Location changed. lat:{}, long:{}",
+					location.getLatitude(), location.getLongitude());
 			currentLocation = new GeoLocation(location);
-			for(LocationChangedListener listener : locationChangedListeners)
-			{
-				listener.locationChanged(new LocationChangedEvent(currentLocation));
+			for (LocationChangedListener listener : locationChangedListeners) {
+				listener.locationChanged(new LocationChangedEvent(
+						currentLocation));
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.location.LocationListener#onProviderDisabled(java.lang.String
+		 * )
 		 */
-		public void onProviderDisabled(String provider) {			
+		public void onProviderDisabled(String provider) {
 		}
 
-		/* (non-Javadoc)
-		 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.location.LocationListener#onProviderEnabled(java.lang.String)
 		 */
-		public void onProviderEnabled(String provider) {			
+		public void onProviderEnabled(String provider) {
 		}
 
-		/* (non-Javadoc)
-		 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.location.LocationListener#onStatusChanged(java.lang.String,
+		 * int, android.os.Bundle)
 		 */
-		public void onStatusChanged(String provider, int status, Bundle extras) {			
+		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
 	}
 
 	/**
-	 * Get the distance in metres from the destination 
+	 * Get the distance in metres from the destination
 	 * 
-	 * @param location from destination
+	 * @param location
+	 *            from destination
 	 * @return distance in metres, 0 if no current destination
 	 */
 	public Double getDistance(GeoLocation location) {
-		if(this.destination == null || location == null)
-		{
+		if (this.destination == null || location == null) {
 			return 0.0;
 		}
 		return (double) location.getDistance(destination);
@@ -188,104 +196,92 @@ public final class GPS {
 	 * @return the bearing, 0 if no current destination
 	 */
 	public double getBearing(GeoLocation location) {
-		if(this.destination == null || location == null){
+		if (this.destination == null || location == null) {
 			return 0.0;
 		}
 		return location.getBearing(destination);
 	}
-	
+
 	/**
 	 * Returns a cardinal point representing the bearing
 	 * 
 	 * @param bearing
 	 * @return cardinal point
 	 */
-	public static String bearingToString(double bearing)
-	{
+	public static String bearingToString(double bearing) {
 		Double fixedBearing = bearing;
-		if(fixedBearing < 0)
-		{
+		if (fixedBearing < 0) {
 			fixedBearing += DEGREES;
 		}
-		
-		if(fixedBearing > DEGREES - (DEGREES/rosePoints.length/2) || fixedBearing <= (DEGREES/rosePoints.length/2))
-		{
+
+		if (fixedBearing > DEGREES - (DEGREES / rosePoints.length / 2)
+				|| fixedBearing <= (DEGREES / rosePoints.length / 2)) {
 			return "N";
 		}
-		
-		double min = (DEGREES/rosePoints.length/2);
-		
-		for(int i = 1; i < rosePoints.length; ++i)
-		{
-			if(fixedBearing > min && fixedBearing <= min + DEGREES/rosePoints.length )
-			{
+
+		double min = (DEGREES / rosePoints.length / 2);
+
+		for (int i = 1; i < rosePoints.length; ++i) {
+			if (fixedBearing > min
+					&& fixedBearing <= min + DEGREES / rosePoints.length) {
 				return rosePoints[i];
+			} else {
+				min += DEGREES / rosePoints.length;
 			}
-			else
-			{
-				min += DEGREES/rosePoints.length;
-			}
-			
+
 		}
-				
+
 		return fixedBearing.toString();
 	}
-	
+
 	/**
 	 * Changes distance in metre into formatted text.
 	 * 
 	 * Takes unit prefernece into account.
 	 * 
-	 * Uses ft/m for anything less than 1 kilometre/mile
-	 * uses kilometre/miles for anything at or above that
+	 * Uses ft/m for anything less than 1 kilometre/mile uses kilometre/miles
+	 * for anything at or above that
 	 * 
-	 * @param metres distance
+	 * @param metres
+	 *            distance
 	 * @return formatted distance string
 	 */
-	public static String distanceToText(double metres)
-	{
+	public static String distanceToText(double metres) {
 		boolean imperial = "imperial".equals(Preferences.get("units"));
 		String unit = "m";
 		double distance = 0;
-		if(imperial)
-		{
+		if (imperial) {
 			double feet = metres * FEET_IN_METRE;
-			if(feet >= FEET_IN_MILE)
-			{
+			if (feet >= FEET_IN_MILE) {
 				unit = "m";
-				distance = feet/FEET_IN_MILE;
-			}
-			else
-			{
+				distance = feet / FEET_IN_MILE;
+			} else {
 				unit = "ft";
 				distance = feet;
 			}
-			
-		}
-		else
-		{
-			if(metres >= METRE_IN_KILO)
-			{
+
+		} else {
+			if (metres >= METRE_IN_KILO) {
 				unit = "km";
-				distance = metres/METRE_IN_KILO;
-			} 
-			else 
-			{
+				distance = metres / METRE_IN_KILO;
+			} else {
 				unit = "m";
 				distance = metres;
 			}
-			
+
 		}
 		return new DecimalFormat("#.#").format(distance) + " " + unit;
-		
+
 	}
 
 	/**
 	 * Add a listener for when the destination changes
 	 * 
-	 * @param listener for destination change
+	 * @param listener
+	 *            for destination change
 	 */
-	public void addDestinationChangedListener(DestinationChangedListener listener) {
+	public void addDestinationChangedListener(
+			DestinationChangedListener listener) {
 		destinationChangedListeners.add(listener);
 	}
 }
