@@ -1,5 +1,8 @@
-
 package ca.setc.activities;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +32,18 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-public class Main extends Activity  {
+public class Main extends Activity {
 
 	public static User user;
 	private Dialog mSplashDialog;
 	private final Logger log = LoggerFactory.getLogger(Main.class);
-	
+
 	private static final int SPASH_DURATION = 3000;
 
 	private ProgressDialog mSpinner;
 	
+	private UncaughtExceptionHandler originalUEH;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,29 +51,36 @@ public class Main extends Activity  {
 		mSpinner = new ProgressDialog(this);
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mSpinner.setMessage(getString(R.string.loading));
-		
-		Preferences.setSharedPreferences(getSharedPreferences("GeoCaching Preferences", MODE_PRIVATE));
+
+		Preferences.setSharedPreferences(getSharedPreferences(
+				"GeoCaching Preferences", MODE_PRIVATE));
 		ConfigureLog4J.configure();
+
+		originalUEH = Thread.getDefaultUncaughtExceptionHandler();
 		
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 			public void uncaughtException(Thread thread, Throwable ex) {
 				log.error("Unhandled Exception", ex);
-
-				Intent intent = new Intent(getApplicationContext(), UnhandledExceptionActivity.class);
-				intent.putExtra("exception", ex.getMessage());
-				startActivity(intent);
-		    }
+				Preferences.setBoolean("UncleanShutdown", true);
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				ex.printStackTrace(pw);
+				Preferences.set("error-to-log",sw.toString());
+				originalUEH.uncaughtException(thread, ex);
+			}
 		});
 
-		Thread.currentThread().setUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler());
+		Thread.currentThread().setUncaughtExceptionHandler(
+				Thread.getDefaultUncaughtExceptionHandler());
 		log.info("Starting up");
 		log.info("{} : {}", "Phone MANUFACTURER", android.os.Build.MANUFACTURER);
 		log.info("{} : {}", "Phone Model", android.os.Build.MODEL);
 		log.info("{} : {}", "Android Version", android.os.Build.VERSION.RELEASE);
-		
+
 		log.debug("Initializing Parse");
-		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3", "JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
+		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3",
+				"JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
 		log.debug("Parse Initialized");
 		showSplashScreen();
 	}
@@ -94,19 +106,23 @@ public class Main extends Activity  {
 	protected void showLogin() {
 		setContentView(R.layout.login);
 		
-		if(Preferences.getBoolean("Remember", false))
+		if(Preferences.getBoolean("UncleanShutdown", false))
 		{
-			((CheckBox)findViewById(R.id.cb_remember)).setChecked(true);
+			Preferences.setBoolean("UncleanShutdown", false);
+			Intent intent = new Intent(this, UnhandledExceptionActivity.class);
+			startActivity(intent);
+		}
+
+		if (Preferences.getBoolean("Remember", false)) {
+			((CheckBox) findViewById(R.id.cb_remember)).setChecked(true);
 			String username = Preferences.get("Username");
-			if(username != null)
-			{
+			if (username != null) {
 				EditText name = (EditText) findViewById(R.id.et_username);
 				name.setText(username);
 			}
-			
+
 			String password = Preferences.get("Password");
-			if(password != null)
-			{
+			if (password != null) {
 				EditText name = (EditText) findViewById(R.id.et_password);
 				name.setText(password);
 			}
@@ -136,81 +152,81 @@ public class Main extends Activity  {
 
 	public void onClick(View v) {
 
-		boolean remember = ((CheckBox)findViewById(R.id.cb_remember)).isChecked();
+		boolean remember = ((CheckBox) findViewById(R.id.cb_remember))
+				.isChecked();
 		Preferences.setBoolean("Remember", remember);
 		log.debug("Button Clicked. Id: {}", v.getId());
 		if (v.getId() == R.id.btn_login) {
-			Button login = (Button)findViewById(R.id.btn_login);
-			Button signup = (Button)findViewById(R.id.btn_signup);
-			
+			Button login = (Button) findViewById(R.id.btn_login);
+			Button signup = (Button) findViewById(R.id.btn_signup);
+
 			login.setEnabled(false);
 			signup.setEnabled(false);
-				
+
 			try {
-				
+
 				final EditText name = (EditText) findViewById(R.id.et_username);
 				log.debug("Attempting to login as {}", name);
 				EditText password = (EditText) findViewById(R.id.et_password);
 				String username = name.getText().toString();
 				String pass = password.getText().toString();
 				Preferences.set("Username", username);
-				if(remember)
-				{
+				if (remember) {
 					Preferences.set("Password", pass);
-				}
-				else
-				{
+				} else {
 					Preferences.set("Password", null);
 				}
 
 				mSpinner.show();
-				ParseUser.logInInBackground(username, pass, new LogInCallback() {
-					public void done(ParseUser user, ParseException e) {
-						if (user != null) {
-							Analytics.send("login");
-							user.increment("access_count");
-							user.saveInBackground();
-							log.debug("Logged in as {} with id {}", name.getText().toString(), user.getObjectId());
-							setUser(user);
-							finish();
-							showMapScreen();
-							mSpinner.dismiss();
-							finish();
-						} else {
-							log.error("Log attempt failed", e);
-							Toast.makeText(null, R.string.login_error, Toast.LENGTH_SHORT).show();
+				ParseUser.logInInBackground(username, pass,
+						new LogInCallback() {
+							public void done(ParseUser user, ParseException e) {
+								if (user != null) {
+									Analytics.send("login");
+									user.increment("access_count");
+									user.saveInBackground();
+									log.debug("Logged in as {} with id {}",
+											name.getText().toString(),
+											user.getObjectId());
+									setUser(user);
+									finish();
+									showMapScreen();
+									mSpinner.dismiss();
+									finish();
+								} else {
+									log.error("Log attempt failed", e);
+									Toast.makeText(null, R.string.login_error,
+											Toast.LENGTH_SHORT).show();
 
-							mSpinner.dismiss();
-						}
-					}
-				});
+									mSpinner.dismiss();
+								}
+							}
+						});
 			} catch (Exception e) {
 				log.error("Log attempt failed", e);
 				login.setEnabled(true);
 				signup.setEnabled(true);
 			}
 		} else if (v.getId() == R.id.btn_signup) {
-			Button login = (Button)findViewById(R.id.btn_login);
-			Button signup = (Button)findViewById(R.id.btn_signup);
+			Button login = (Button) findViewById(R.id.btn_login);
+			Button signup = (Button) findViewById(R.id.btn_signup);
 
 			login.setEnabled(false);
 			signup.setEnabled(false);
 			EditText name = (EditText) findViewById(R.id.et_username);
 			EditText password = (EditText) findViewById(R.id.et_password);
 			EditText email = (EditText) findViewById(R.id.et_email);
-			
-			log.debug("Attempting to signup as {} with email {}", name.getText().toString(), email.getText().toString());
-			
+
+			log.debug("Attempting to signup as {} with email {}", name
+					.getText().toString(), email.getText().toString());
+
 			final ParseUser pUser = new ParseUser();
 			String username = name.getText().toString();
 			String pass = password.getText().toString();
 			Preferences.set("Username", username);
-			if(remember)
-			{
+			if (remember) {
 				Preferences.set("Password", pass);
-			}
-			else
-			{
+			} else {
 
 				Preferences.set("Password", null);
 			}
@@ -224,7 +240,8 @@ public class Main extends Activity  {
 					if (e == null) {
 						pUser.increment("access_count");
 						pUser.saveInBackground();
-						log.error("Signup attempt succeeded. Id: {}", pUser.getObjectId());
+						log.error("Signup attempt succeeded. Id: {}",
+								pUser.getObjectId());
 						showMapScreen();
 						finish();
 					} else {

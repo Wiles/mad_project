@@ -3,7 +3,6 @@ package ca.setc.activities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import ca.setc.config.Preferences;
@@ -74,6 +72,7 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
             case R.id.menu_settings:
     			Intent intent = new Intent(this, UserSettings.class);
     			startActivity(intent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
