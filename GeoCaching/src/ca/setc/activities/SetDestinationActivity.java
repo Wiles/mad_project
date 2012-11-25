@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -36,10 +37,16 @@ public class SetDestinationActivity extends Activity {
 	
 	private static final int MAX_DESTINATION = 10;
 	
+
+	private ProgressDialog mSpinner;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_destination);
+        
+
+		mSpinner = ProgressDialog.show(this, "", getString(R.string.loading));
         
         loadNear();
     }
@@ -97,7 +104,8 @@ public class SetDestinationActivity extends Activity {
 						dones();
 					}
 				});
-			} 
+		    	mSpinner.dismiss();
+			}
     	});
     }
 }

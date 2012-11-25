@@ -3,6 +3,7 @@ package ca.setc.activities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import ca.setc.config.Preferences;
@@ -42,8 +44,10 @@ public class Map extends MapActivity implements LocationChangedListener, Destina
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         log.debug("Entering map activity");
         setContentView(R.layout.activity_geo_caching);
+		
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mc = mapView.getController();

@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -34,11 +36,17 @@ public class Main extends Activity  {
 	private final Logger log = LoggerFactory.getLogger(Main.class);
 	
 	private static final int SPASH_DURATION = 3000;
-	
+
+	private ProgressDialog mSpinner;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mSpinner = new ProgressDialog(this);
+		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mSpinner.setMessage(getString(R.string.loading));
+		
 		Preferences.setSharedPreferences(getSharedPreferences("GeoCaching Preferences", MODE_PRIVATE));
 		ConfigureLog4J.configure();
 		
@@ -154,6 +162,8 @@ public class Main extends Activity  {
 				{
 					Preferences.set("Password", null);
 				}
+
+				mSpinner.show();
 				ParseUser.logInInBackground(username, pass, new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
 						if (user != null) {
@@ -164,10 +174,13 @@ public class Main extends Activity  {
 							setUser(user);
 							finish();
 							showMapScreen();
+							mSpinner.dismiss();
 							finish();
 						} else {
 							log.error("Log attempt failed", e);
 							Toast.makeText(null, R.string.login_error, Toast.LENGTH_SHORT).show();
+
+							mSpinner.dismiss();
 						}
 					}
 				});
@@ -204,6 +217,7 @@ public class Main extends Activity  {
 			pUser.setUsername(username);
 			pUser.setPassword(pass);
 			pUser.setEmail(email.getText().toString());
+			mSpinner.show();
 			pUser.signUpInBackground(new SignUpCallback() {
 				@Override
 				public void done(ParseException e) {
@@ -214,6 +228,7 @@ public class Main extends Activity  {
 						showMapScreen();
 						finish();
 					} else {
+						mSpinner.dismiss();
 						log.error("Signup attempt failed", e);
 						Toast.makeText(null, R.string.login_error,
 								Toast.LENGTH_SHORT).show();
