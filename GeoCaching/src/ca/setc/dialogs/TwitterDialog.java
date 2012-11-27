@@ -34,7 +34,7 @@ public class TwitterDialog extends Dialog {
 	private final Logger log = LoggerFactory.getLogger(TwitterDialog.class);
 
 	/** The Constant MAGIC. */
-	private static 	final float MAGIC = 0.5f;
+	private static final float SCALE_FIX = 0.5f;
 
 	/** The Constant BLUE. */
 	private static final int BLUE = 0xFF6D84B4;
@@ -108,8 +108,9 @@ public class TwitterDialog extends Dialog {
 		addContentView(
 				mContent,
 				new LinearLayout.LayoutParams(display.getWidth()
-						- ((int) (dimensions[0] * scale + MAGIC)), display
-						.getHeight() - ((int) (dimensions[1] * scale + MAGIC))));
+						- ((int) (dimensions[0] * scale + SCALE_FIX)), display
+						.getHeight()
+						- ((int) (dimensions[1] * scale + SCALE_FIX))));
 	}
 
 	/**

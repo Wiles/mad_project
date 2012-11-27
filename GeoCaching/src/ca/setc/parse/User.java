@@ -43,7 +43,7 @@ public class User {
 				new ParseGeoPoint(location.getLatitude(), location
 						.getLongitude()));
 
-		parseUser.saveInBackground();
+		parseUser.saveEventually();
 	}
 
 	/**

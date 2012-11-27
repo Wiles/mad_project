@@ -58,7 +58,7 @@ public class SignLogBook extends Activity {
 			parse.put("user", Preferences.getCurrentUser().toParseUser());
 			parse.put("destination", Preferences.getDestination());
 			parse.put("message", msg);
-			parse.saveInBackground();
+			parse.saveEventually();
 			finish();
 		}
 	}

@@ -78,7 +78,7 @@ public class AddDestinationActivity extends Activity {
 						Double.parseDouble(lat.getText().toString()),
 						Double.parseDouble(lng.getText().toString()));
 				parse.put("location", location);
-				parse.saveInBackground();
+				parse.saveEventually();
 				finish();
 			} catch (Exception ex) {
 				log.error("Create desination failed: {}", ex.getMessage());
