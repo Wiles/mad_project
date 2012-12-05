@@ -3,7 +3,7 @@
     <string name="app_name">Take a Hike</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_geo_caching">GeoCaching</string>
+    <string name="title_activity_geo_caching">Take a Hike</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="splash_title">Take a Hike!</string>
     <string name="add_destination">Add Destination</string>
