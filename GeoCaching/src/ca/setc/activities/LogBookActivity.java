@@ -19,7 +19,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 /**
  * View the logbook
@@ -89,13 +88,7 @@ public class LogBookActivity extends Activity {
 		for (int i = 0; i < entryList.size(); ++i) {
 			ParseObject obj = entryList.get(i);
 			entries.add(obj);
-			String username = getString(R.string.unknown_user);
-			try {
-				ParseUser user = obj.getParseUser("user").fetch();
-				username = user.getUsername();
-			} catch (ParseException ignore) {
-				// ignore
-			}
+			String username = obj.getString("username");
 			str[i] = String.format("%s %s%n---%n%s", username, prettyTime.format(obj.getCreatedAt()), obj.getString("message"));
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,

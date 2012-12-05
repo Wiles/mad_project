@@ -57,6 +57,7 @@ public class SignLogBook extends Activity {
 			ParseObject parse = new ParseObject("LogEntry");
 			parse.put("user", Preferences.getCurrentUser().toParseUser());
 			parse.put("destination", Preferences.getDestination());
+			parse.put("username", Preferences.getCurrentUser().getUsername());
 			parse.put("message", msg);
 			parse.saveEventually();
 			finish();

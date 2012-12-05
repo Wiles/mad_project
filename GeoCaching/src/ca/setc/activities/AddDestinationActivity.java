@@ -58,7 +58,7 @@ public class AddDestinationActivity extends Activity {
 	 * Handles button clicks
 	 * 
 	 * @param v
-	 *            the v
+	 *            the view
 	 */
 	public void onClick(View v) {
 
@@ -85,9 +85,7 @@ public class AddDestinationActivity extends Activity {
 
 				Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
 			}
-		} 
-		else if (v.getId() == R.id.btn_image)
-		{
+		} else if (v.getId() == R.id.btn_image) {
 			log.debug("Entering add image event");
 			Intent intent = new Intent(this, TakePictureActivity.class);
 			startActivity(intent);

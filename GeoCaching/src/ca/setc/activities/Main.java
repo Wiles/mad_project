@@ -62,6 +62,7 @@ public class Main extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ConfigureLog4J.configure();
 
 		mSpinner = new ProgressDialog(this);
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -69,7 +70,6 @@ public class Main extends Activity {
 
 		Preferences.setSharedPreferences(getSharedPreferences(
 				"GeoCaching Preferences", MODE_PRIVATE));
-		ConfigureLog4J.configure();
 
 		originalUEH = Thread.getDefaultUncaughtExceptionHandler();
 
