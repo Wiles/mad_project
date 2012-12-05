@@ -23,7 +23,7 @@ public final class ConfigureLog4J {
 		final LogConfigurator logConfigurator = new LogConfigurator();
 
 		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
-				+ File.separator + "geocaching.log");
+				+ File.separator + "geocaching.txt");
 		logConfigurator.setRootLevel(Level.ALL);
 		logConfigurator.setImmediateFlush(true);
 		logConfigurator.setMaxBackupSize(DEFAULT_FILE_COUNT);
