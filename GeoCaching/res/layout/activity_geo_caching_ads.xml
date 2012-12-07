@@ -104,4 +104,13 @@
         android:contentDescription="@string/compass"
         android:src="@drawable/compass_raw" />
 
+    <ImageView
+        android:id="@+id/img_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/Direction"
+        android:src="@drawable/direction_raw" />
+
 </RelativeLayout>

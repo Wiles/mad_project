@@ -60,5 +60,6 @@
     <string name="about_text">About\nApp</string>
     <string name="about">About</string>
     <string name="compass">compass</string>
+    <string name="Direction">Direction</string>
 
 </resources>
