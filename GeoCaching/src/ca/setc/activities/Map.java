@@ -5,19 +5,28 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import ca.setc.config.Preferences;
 import ca.setc.dialogs.TwitterDialog;
 import ca.setc.geocaching.AboutActivity;
+import ca.setc.geocaching.Compass;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
+import ca.setc.geocaching.events.CompassUpdateEvent;
+import ca.setc.geocaching.events.CompassUpdateEventListener;
 import ca.setc.geocaching.events.DestinationChangedEvent;
 import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
@@ -32,14 +41,15 @@ import com.google.android.maps.MapView;
  * Map activity. Displays the distance and bearing to a destination
  */
 public class Map extends MapActivity implements LocationChangedListener,
-		DestinationChangedListener {
+		DestinationChangedListener, CompassUpdateEventListener {
 
 	/** The GPS. */
 	private GPS gps = GPS.getInstance();
 
 	/** The MapController. */
 	private MapController mc;
-
+	private Float prevYaw;
+	
 	/**
 	 * Maximum distance from the destination a user is allowed to view and sign
 	 * the log book
@@ -80,6 +90,8 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		gps.setLocationManager(lm);
+		
+		Compass.getInstance().addChangeListener(this);
 	}
 
 	/*
@@ -254,5 +266,37 @@ public class Map extends MapActivity implements LocationChangedListener,
 			signLogBook.setVisibility(View.INVISIBLE);
 			signLogBook.setClickable(false);
 		}
+	}
+
+	public void compassUpdate(CompassUpdateEvent event) {
+		float newYaw = event.getYaw();
+		if(prevYaw == null || Math.abs(newYaw - prevYaw) > 2.5f)
+		{
+			prevYaw = newYaw;
+			ImageView compass = (ImageView)findViewById(R.id.img_compass);
+			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
+			        R.drawable.compass_raw);
+			float orientationCorrection = 0.0f;
+			WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		    Display mDisplay = mWindowManager.getDefaultDisplay();
+		    switch(mDisplay.getOrientation())
+		    {
+		    	case(1):
+		    		orientationCorrection = -90.0f;
+	    			break;
+		    	case(3):
+		    		orientationCorrection = 90.0f;
+		    		break;
+		    	default:
+		    		break;
+		    }
+			Matrix rotate = new Matrix();
+			rotate.setRotate(-newYaw + orientationCorrection, sprite.getHeight()/2.0f, sprite.getWidth()/2.0f);
+
+			Bitmap rSprite = Bitmap.createBitmap(sprite, 0, 0,
+			        sprite.getWidth(), sprite.getHeight(), rotate, true);
+			compass.setImageBitmap(rSprite);
+		}
+		
 	}
 }

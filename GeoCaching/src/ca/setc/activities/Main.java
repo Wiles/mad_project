@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
+import ca.setc.geocaching.Compass;
 import ca.setc.geocaching.R;
 import ca.setc.logging.Analytics;
 import ca.setc.logging.ConfigureLog4J;
@@ -67,7 +70,6 @@ public class Main extends Activity {
 		mSpinner = new ProgressDialog(this);
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mSpinner.setMessage(getString(R.string.loading));
-
 		Preferences.setSharedPreferences(getSharedPreferences(
 				"GeoCaching Preferences", MODE_PRIVATE));
 
@@ -104,6 +106,9 @@ public class Main extends Activity {
 		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3",
 				"JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
 		log.debug("Parse Initialized");
+		
+		Compass.getInstance().setSensorManager((SensorManager)getSystemService(Context.SENSOR_SERVICE));
+		
 		showSplashScreen();
 	}
 
