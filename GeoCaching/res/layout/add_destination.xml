@@ -22,12 +22,12 @@
         android:layout_alignParentBottom="true"
         android:onClick="onClick"
         android:text="@string/create_cache" />
-
+
     <EditText
         android:id="@+id/et_desc"
         android:layout_width="match_parent"
         android:layout_height="288dp"
-        android:layout_above="@+id/imageView1"
+        android:layout_above="@+id/img_dest"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView3"
         android:ems="10"
@@ -69,9 +69,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/et_add_long"
         android:text="@string/Description" />
-
+
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/img_dest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -79,7 +79,8 @@
         android:layout_alignRight="@+id/strut"
         android:layout_alignTop="@+id/btn_image"
         android:contentDescription="@string/image_content_description"
-        android:src="@drawable/ic_action_search" />
+        android:scaleType="center"
+        android:src="@drawable/ic_menu_camera" />
 
     <Button
         android:id="@+id/btn_image"

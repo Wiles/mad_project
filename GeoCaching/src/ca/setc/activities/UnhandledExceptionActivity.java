@@ -57,7 +57,7 @@ public class UnhandledExceptionActivity extends Activity {
 			try {
 				ParseObject object = new ParseObject("UnhandledError");
 				object.put("stacktrace", errorMessage);
-				object.save();
+				object.saveEventually();
 			} catch (Exception ignore) {
 				// ignore
 			}

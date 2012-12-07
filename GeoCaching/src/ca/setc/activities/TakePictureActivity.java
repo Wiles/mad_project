@@ -2,6 +2,12 @@ package ca.setc.activities;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.graphics.ImageFormat;
@@ -10,15 +16,22 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 import ca.setc.geocaching.R;
+import ca.setc.geocaching.events.PhotoEvent;
+import ca.setc.geocaching.events.PhotoListener;
 
 public class TakePictureActivity extends Activity {
+	
+	/** The log. */
+	private final Logger log = LoggerFactory.getLogger(TakePictureActivity.class);
+	private static final List<PhotoListener> listeners = new ArrayList<PhotoListener>();
+	
 	  private SurfaceView preview=null;
 	  private SurfaceHolder previewHolder=null;
 	  private Camera camera=null;
@@ -74,12 +87,21 @@ public class TakePictureActivity extends Activity {
 
 	  @Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
-	    return super.onCreateOptionsMenu(menu);
+		new MenuInflater(this).inflate(R.menu.options, menu);
+		
+		return(super.onCreateOptionsMenu(menu));
 	  }
 
 	  @Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
-	    return super.onOptionsItemSelected(item);
+	    if (item.getItemId() == R.id.camera) {
+	        if (inPreview) {
+	          camera.takePicture(null, null, photoCallback);
+	          inPreview=false;
+	        }
+	      }
+
+	      return(super.onOptionsItemSelected(item));
 	  }
 
 	  private Camera.Size getBestPreviewSize(int width, int height,
@@ -131,8 +153,7 @@ public class TakePictureActivity extends Activity {
 	        camera.setPreviewDisplay(previewHolder);
 	      }
 	      catch (Throwable t) {
-	        Log.e("PreviewDemo-surfaceCallback",
-	              "Exception in setPreviewDisplay()", t);
+	    	  log.error("Exception in setPreviewDisplay()", t);
 	        Toast.makeText(TakePictureActivity.this, t.getMessage(),
 	                       Toast.LENGTH_LONG).show();
 	      }
@@ -153,7 +174,12 @@ public class TakePictureActivity extends Activity {
 	      }
 	    }
 	  }
-
+	  
+	  public static void addPhotoListener(PhotoListener listener)
+	  {
+	  	listeners.add(listener);
+	  }
+	  
 	  private void startPreview() {
 	    if (cameraConfigured && camera != null) {
 	      camera.startPreview();
@@ -180,8 +206,7 @@ public class TakePictureActivity extends Activity {
 	  Camera.PictureCallback photoCallback=new Camera.PictureCallback() {
 	    public void onPictureTaken(byte[] data, Camera camera) {
 	      new SavePhotoTask().execute(data);
-	      camera.startPreview();
-	      inPreview=true;
+	      finish();
 	    }
 	  };
 
@@ -190,20 +215,33 @@ public class TakePictureActivity extends Activity {
 	    protected String doInBackground(byte[]... jpeg) {
 	      File photo=
 	          new File(Environment.getExternalStorageDirectory(),
-	                   "photo.jpg");
+	                   ".takeahike.bmp");
 
 	      if (photo.exists()) {
 	        photo.delete();
 	      }
-
+	      FileOutputStream fos = null;
 	      try {
-	        FileOutputStream fos=new FileOutputStream(photo.getPath());
+	         fos=new FileOutputStream(photo.getPath());
 
 	        fos.write(jpeg[0]);
 	        fos.close();
+	        for(PhotoListener listener : listeners)
+	        {
+	        	listener.photoTaken(new PhotoEvent(photo));
+	        }
 	      }
 	      catch (java.io.IOException e) {
-	        Log.e("PictureDemo", "Exception in photoCallback", e);
+	    	  log.error("Exception in photoCallback", e);
+	      } finally
+	      {
+	    	  if(fos != null){
+	    		  try {
+					fos.close();
+				} catch (IOException ignore) {
+					//Why do you throw here Java? I've never seen it handled by anyone.
+				}
+	    	  }
 	      }
 
 	      return(null);

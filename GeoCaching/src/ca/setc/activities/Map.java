@@ -50,6 +50,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 	private MapController mc;
 	private Float prevYaw;
 	private double prevBearing;
+	private static final double REDRAW_DIFF = 5.0;
 	
 	/**
 	 * Maximum distance from the destination a user is allowed to view and sign
@@ -157,7 +158,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 		updateDisplay(location, gps.getDestination());
 		
 		double newBearing = event.getLocation().getBearing(gps.getDestination());
-		if(Math.abs(newBearing - prevBearing) > 2.5)
+		if(Math.abs(newBearing - prevBearing) > REDRAW_DIFF)
 		{
 			prevBearing = newBearing;
 			ImageView compass = (ImageView)findViewById(R.id.img_direction);
@@ -217,7 +218,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 				dest.getLongitude());
 		updateDisplay(gps.getCurrentLocation(), dest);
 		double newBearing = gps.getCurrentLocation().getBearing(event.getDestination());
-		if(Math.abs(newBearing - prevBearing) > 2.5)
+		if(Math.abs(newBearing - prevBearing) > REDRAW_DIFF)
 		{
 			prevBearing = newBearing;
 			ImageView compass = (ImageView)findViewById(R.id.img_direction);
@@ -306,18 +307,19 @@ public class Map extends MapActivity implements LocationChangedListener,
 	
 	private Bitmap rotateImage(Bitmap image, double degrees)
 	{
-		float orientationCorrection = 0.0f;
+		float orientationCorrection;
 		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 	    Display mDisplay = mWindowManager.getDefaultDisplay();
 	    switch(mDisplay.getOrientation())
 	    {
 	    	case(1):
-	    		orientationCorrection = -90.0f;
+	    		orientationCorrection = +90.0f;
     			break;
 	    	case(3):
-	    		orientationCorrection = 90.0f;
+	    		orientationCorrection = -90.0f;
 	    		break;
 	    	default:
+	    		orientationCorrection = 0.0f;
 	    		break;
 	    }
 		Matrix rotate = new Matrix();

@@ -3,16 +3,16 @@ package ca.setc.geocaching;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ca.setc.geocaching.events.CompassUpdateEvent;
-import ca.setc.geocaching.events.CompassUpdateEventListener;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import ca.setc.geocaching.events.CompassUpdateEvent;
+import ca.setc.geocaching.events.CompassUpdateEventListener;
 
 public final class Compass implements SensorEventListener{
 
@@ -23,13 +23,13 @@ public final class Compass implements SensorEventListener{
 	private static Compass instance = new Compass();
 
     private static double rad2deg = (double)(180.0/Math.PI);
+    private DateTime lastUpdate = new DateTime();
 	
     private float[] accelerometerData = new float[3];
     private float[] magneticFieldData = new float[3];
     private float[] mR = new float[16];
     private float[] mI = new float[16];
     private float[] orientation = new float[3];
-    private int count;
     private List<CompassUpdateEventListener> listeners = new ArrayList<CompassUpdateEventListener>();
 	
 	private Compass(){}
@@ -54,8 +54,8 @@ public final class Compass implements SensorEventListener{
         Sensor gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        sensorManager.registerListener(this, gsensor, SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(this, msensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, gsensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, msensor, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -63,38 +63,41 @@ public final class Compass implements SensorEventListener{
 	}
 
 	public void onSensorChanged(SensorEvent event) {
-		int type = event.sensor.getType();
-        float[] data;
-        if (type == Sensor.TYPE_ACCELEROMETER) {
-            data = accelerometerData;
-        } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
-            data = magneticFieldData;
-        } else {
-            // we should not be here.
-            return;
-        }
-        for (int i=0 ; i<3 ; i++)
-            data[i] = event.values[i];
+    	long diff = DateTime.now().getMillis() - lastUpdate.getMillis();
+        if ( diff > 250) {
+        	lastUpdate = DateTime.now();
 
-        SensorManager.getRotationMatrix(mR, mI, accelerometerData, magneticFieldData);
-        SensorManager.getOrientation(mR, orientation);
-        float incline = (float) (SensorManager.getInclination(mI) * rad2deg);
-    	float yaw = (float) (orientation[0]*rad2deg);
-    	float pitch = (float) (orientation[1]*rad2deg);
-    	float roll = (float) (orientation[2]*rad2deg);
-        if (count++ > 50) {
-            count = 0;
+    		int type = event.sensor.getType();
+            float[] data;
+            if (type == Sensor.TYPE_ACCELEROMETER) {
+                data = accelerometerData;
+            } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
+                data = magneticFieldData;
+            } else {
+                // we should not be here.
+                return;
+            }
+            for (int i=0 ; i<3 ; i++)
+                data[i] = event.values[i];
+
+            SensorManager.getRotationMatrix(mR, mI, accelerometerData, magneticFieldData);
+            SensorManager.getOrientation(mR, orientation);
+            float incline = (float) (SensorManager.getInclination(mI) * rad2deg);
+        	float yaw = (float) (orientation[0]*rad2deg);
+        	float pitch = (float) (orientation[1]*rad2deg);
+        	float roll = (float) (orientation[2]*rad2deg);
+        	
             log.info("Yaw: {}. Pitch: {}. Roll: {}. Inline: {}.", 
             		new Object[]{
             		yaw, 
             		pitch, 
             		roll, 
             		incline});
-        }
-        
-        for(CompassUpdateEventListener listener : listeners)
-        {
-        	listener.compassUpdate(new CompassUpdateEvent(yaw, pitch, roll, incline));
+            
+            for(CompassUpdateEventListener listener : listeners)
+            {
+            	listener.compassUpdate(new CompassUpdateEvent(yaw, pitch, roll, incline));
+            }
         }
 	}
 }

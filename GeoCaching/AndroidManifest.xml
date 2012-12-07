@@ -75,7 +75,8 @@
         </activity>
         <activity
             android:name="ca.setc.activities.TakePictureActivity"
-            android:label="@string/title_activity_take_picture" >
+            android:label="@string/title_activity_take_picture"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".AboutActivity"
