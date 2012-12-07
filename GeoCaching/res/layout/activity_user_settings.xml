@@ -50,4 +50,14 @@
         android:onClick="onClick"
         android:text="@string/Analytics" />
 
+    <CheckBox
+        android:id="@+id/cb_pro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:onClick="onClick"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/cb_analytics"
+        android:text="@string/ad_free" />
+
 </RelativeLayout>

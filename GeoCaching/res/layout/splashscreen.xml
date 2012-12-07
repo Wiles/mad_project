@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/take_a_hike"
-        android:src="@drawable/icon_full" 
+        android:src="@drawable/icon_full_white" 
         />
 
     <TextView

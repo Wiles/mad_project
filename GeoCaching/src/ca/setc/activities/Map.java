@@ -58,10 +58,17 @@ public class Map extends MapActivity implements LocationChangedListener,
 		super.onCreate(savedInstanceState);
 
 		log.debug("Entering map activity");
-		setContentView(R.layout.activity_geo_caching);
+		if(Preferences.getBoolean("premium", false))
+		{
+			setContentView(R.layout.activity_geo_caching);
+		}
+		else
+		{
+			setContentView(R.layout.activity_geo_caching_ads);
+		}
 
 		MapView mapView = (MapView) findViewById(R.id.mapview);
-		mapView.setBuiltInZoomControls(true);
+		mapView.setBuiltInZoomControls(false);
 		mc = mapView.getController();
 
 		gps.addLocationChangedListener(this);
@@ -236,15 +243,11 @@ public class Map extends MapActivity implements LocationChangedListener,
 			viewLogBook.setClickable(true);
 			signLogBook.setVisibility(View.VISIBLE);
 			signLogBook.setClickable(true);
-			MapView mapView = (MapView) findViewById(R.id.mapview);
-			mapView.setBuiltInZoomControls(false);
 		} else {
 			viewLogBook.setVisibility(View.INVISIBLE);
 			viewLogBook.setClickable(false);
 			signLogBook.setVisibility(View.INVISIBLE);
 			signLogBook.setClickable(false);
-			MapView mapView = (MapView) findViewById(R.id.mapview);
-			mapView.setBuiltInZoomControls(true);
 		}
 	}
 }

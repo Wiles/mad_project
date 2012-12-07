@@ -10,7 +10,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@+id/et_username"
         android:contentDescription="@string/take_a_hike"
-        android:src="@drawable/icon_full" />
+        android:src="@drawable/icon_full_white" />
 
 	<Button
 	    android:id="@+id/btn_signup"

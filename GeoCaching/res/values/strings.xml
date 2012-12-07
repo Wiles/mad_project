@@ -53,5 +53,7 @@
     <string name="login">Login</string>
     <string name="signup">Sign Up</string>
     <string name="email">email</string>
-
+    <string name="ad_space">Your Ad Here!</string>
+    <string name="ad_free">Ad free</string>
+	<string name="updated_to_premium">Restart to remove ads</string>
 </resources>
