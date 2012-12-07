@@ -46,7 +46,7 @@ public class TakePictureActivity extends Activity {
 	      for (int i=0; i < Camera.getNumberOfCameras(); i++) {
 	        Camera.getCameraInfo(i, info);
 
-	        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+	        if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
 	          camera=Camera.open(i);
 	        }
 	      }

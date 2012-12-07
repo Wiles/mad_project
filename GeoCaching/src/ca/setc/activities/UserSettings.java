@@ -51,8 +51,7 @@ public class UserSettings extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_user_settings, menu);
-		return true;
+		return false;
 	}
 
 	/**
@@ -64,39 +63,41 @@ public class UserSettings extends Activity {
 	public void onClick(View v) {
 		CheckBox cb;
 		switch (v.getId()) {
-		case (R.id.cb_analytics):
-			CheckBox ana = (CheckBox) findViewById(R.id.cb_analytics);
-			if (ana.isChecked()) {
-				Preferences.setBoolean("analytics", true);
-			} else {
-				Preferences.setBoolean("analytics", false);
-			}
-			break;
-		case (R.id.cb_disable_twitter):
-			cb = (CheckBox) findViewById(R.id.cb_disable_twitter);
-			if (cb.isChecked()) {
-				Preferences.setBoolean("twitter_disabled", true);
-			} else {
-				Preferences.setBoolean("twitter_disabled", false);
-			}
-			break;
-		case (R.id.radio_imperial):
-			Preferences.set("units", "imperial");
-			break;
-		case (R.id.radio_metric):
-			Preferences.set("units", "metric");
-			break;
-		case (R.id.cb_pro):
-			cb = (CheckBox) findViewById(R.id.cb_pro);
-			if (cb.isChecked()) {
-				Preferences.setBoolean("premium", true);
-				Toast.makeText(UserSettings.this, R.string.updated_to_premium,
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Preferences.setBoolean("premium", false);
-			}
-			break;
-		default:
+			case (R.id.cb_analytics):
+				CheckBox ana = (CheckBox) findViewById(R.id.cb_analytics);
+				if (ana.isChecked()) {
+					Preferences.setBoolean("analytics", true);
+				} else {
+					Preferences.setBoolean("analytics", false);
+				}
+				break;
+			case (R.id.cb_disable_twitter):
+				cb = (CheckBox) findViewById(R.id.cb_disable_twitter);
+				if (cb.isChecked()) {
+					Preferences.setBoolean("twitter_disabled", true);
+				} else {
+					Preferences.setBoolean("twitter_disabled", false);
+				}
+				break;
+			case (R.id.radio_imperial):
+				Preferences.set("units", "imperial");
+				break;
+			case (R.id.radio_metric):
+				Preferences.set("units", "metric");
+				break;
+			case (R.id.cb_pro):
+				cb = (CheckBox) findViewById(R.id.cb_pro);
+				if (cb.isChecked()) {
+					Preferences.setBoolean("premium", true);
+					Toast.makeText(UserSettings.this, R.string.updated_to_premium,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Preferences.setBoolean("premium", false);
+				}
+				break;
+			default:
+				//do nothing
+				break;
 		}
 	}
 }

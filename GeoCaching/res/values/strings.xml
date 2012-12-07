@@ -55,5 +55,9 @@
     <string name="email">email</string>
     <string name="ad_space">Your Ad Here!</string>
     <string name="ad_free">Ad free</string>
-	<string name="updated_to_premium">Restart to remove ads</string>
+    <string name="updated_to_premium">Restart to remove ads</string>
+    <string name="title_activity_about">About</string>
+    <string name="about_text">About\nApp</string>
+    <string name="about">About</string>
+
 </resources>

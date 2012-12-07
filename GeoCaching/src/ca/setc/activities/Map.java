@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import ca.setc.config.Preferences;
 import ca.setc.dialogs.TwitterDialog;
+import ca.setc.geocaching.AboutActivity;
 import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.DestinationChangedEvent;
@@ -100,11 +101,15 @@ public class Map extends MapActivity implements LocationChangedListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
+		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
-			Intent intent = new Intent(this, UserSettings.class);
+			intent = new Intent(this, UserSettings.class);
 			startActivity(intent);
-
+			return true;
+		case R.id.menu_about:
+			intent = new Intent(this, AboutActivity.class);
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
