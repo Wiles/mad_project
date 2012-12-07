@@ -5,9 +5,8 @@ public class CompassUpdateEvent {
 	private float pitch;
 	private float roll;
 	private float incline;
-	
-	public CompassUpdateEvent(float yaw, float pitch, float roll, float incline)
-	{
+
+	public CompassUpdateEvent(float yaw, float pitch, float roll, float incline) {
 		this.yaw = yaw;
 		this.pitch = pitch;
 		this.roll = roll;

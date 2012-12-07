@@ -38,10 +38,8 @@ public class User {
 	 *            the new current location
 	 */
 	public void setCurrentLocation(GeoLocation location) {
-		parseUser.put(
-				"lastLocation",
-				new ParseGeoPoint(location.getLatitude(), location
-						.getLongitude()));
+		parseUser.put("lastLocation", new ParseGeoPoint(location.getLatitude(),
+				location.getLongitude()));
 
 		parseUser.saveEventually();
 	}
@@ -54,14 +52,13 @@ public class User {
 	public ParseUser toParseUser() {
 		return this.parseUser;
 	}
-	
+
 	/**
 	 * Get the username
 	 * 
 	 * @return the username
 	 */
-	public String getUsername()
-	{
+	public String getUsername() {
 		return this.parseUser.getUsername();
 	}
 }

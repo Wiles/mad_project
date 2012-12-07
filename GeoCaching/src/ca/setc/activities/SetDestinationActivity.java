@@ -102,22 +102,20 @@ public class SetDestinationActivity extends Activity {
 				if (exception != null) {
 					Toast.makeText(SetDestinationActivity.this,
 							exception.getMessage(), Toast.LENGTH_LONG).show();
-				}
-				else
-				{
+				} else {
 					loadList(list);
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Load a list of destination onto the screen
-	 *
-	 * @param list the list
+	 * 
+	 * @param list
+	 *            the list
 	 */
-	private void loadList(List<ParseObject> list)
-	{
+	private void loadList(List<ParseObject> list) {
 		locations.clear();
 
 		ListView lv = (ListView) findViewById(R.id.lv_destinations);
@@ -126,30 +124,26 @@ public class SetDestinationActivity extends Activity {
 		for (int i = 0; i < list.size(); ++i) {
 			ParseObject obj = list.get(i);
 			locations.add(obj);
-			GeoLocation dest = new GeoLocation((ParseGeoPoint) obj
-					.get("location"));
+			GeoLocation dest = new GeoLocation(
+					(ParseGeoPoint) obj.get("location"));
 			GeoLocation curr = Preferences.getCurrentUser()
 					.getCurrentLocation();
-			str[i] = String.format(
-					getString(R.string.destination_description),
+			str[i] = String.format(getString(R.string.destination_description),
 					GPS.distanceToText(curr.getDistance(dest)),
 					GPS.bearingToString(curr.getBearing(dest)),
 					obj.get("description"));
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 				SetDestinationActivity.this,
-				android.R.layout.simple_list_item_1,
-				android.R.id.text1, str);
+				android.R.layout.simple_list_item_1, android.R.id.text1, str);
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * android.widget.AdapterView.OnItemClickListener#onItemClick
-			 * (android.widget.AdapterView, android.view.View, int,
-			 * long)
+			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick
+			 * (android.widget.AdapterView, android.view.View, int, long)
 			 */
 			public void onItemClick(AdapterView<?> adater, View view,
 					int position, long id) {
@@ -157,13 +151,14 @@ public class SetDestinationActivity extends Activity {
 			}
 		});
 		mSpinner.dismiss();
-		
+
 	}
 
 	/**
 	 * Updates the GPS and preferences with the new location
 	 * 
-	 * @param position index of item clicked
+	 * @param position
+	 *            index of item clicked
 	 */
 	private void itemClick(int position) {
 

@@ -30,10 +30,10 @@ public class LogBookActivity extends Activity {
 
 	/** The m spinner. */
 	private ProgressDialog mSpinner;
-	
-	/** Date formatter for social media like formats*/
+
+	/** Date formatter for social media like formats */
 	private PrettyTime prettyTime = new PrettyTime();
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -45,7 +45,7 @@ public class LogBookActivity extends Activity {
 		setContentView(R.layout.activity_log_book);
 
 		mSpinner = ProgressDialog.show(this, "", getString(R.string.loading));
-		
+
 		ParseQuery query = new ParseQuery("LogEntry");
 		query.whereEqualTo("destination", Preferences.getDestination());
 		query.orderByDescending("createdAt");
@@ -89,7 +89,9 @@ public class LogBookActivity extends Activity {
 			ParseObject obj = entryList.get(i);
 			entries.add(obj);
 			String username = obj.getString("username");
-			str[i] = String.format("%s %s%n---%n%s", username, prettyTime.format(obj.getCreatedAt()), obj.getString("message"));
+			str[i] = String.format("%s %s%n---%n%s", username,
+					prettyTime.format(obj.getCreatedAt()),
+					obj.getString("message"));
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1, str);

@@ -15,8 +15,8 @@ public final class Preferences {
 
 	/** The current user. */
 	private static User currentUser;
-	
-	/** The destination parse object*/
+
+	/** The destination parse object */
 	private static ParseObject destination;
 
 	/**
@@ -53,19 +53,17 @@ public final class Preferences {
 	public static User getCurrentUser() {
 		return currentUser;
 	}
-	
+
 	/**
 	 * Sets the destination.
-	 *
+	 * 
 	 * @return the parses the object
 	 */
-	public static void setDestination(ParseObject destination)
-	{
+	public static void setDestination(ParseObject destination) {
 		Preferences.destination = destination;
 	}
-	
-	public static ParseObject getDestination()
-	{
+
+	public static ParseObject getDestination() {
 		return destination;
 	}
 

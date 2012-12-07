@@ -31,7 +31,7 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 	/** The log. */
 	private final Logger log = LoggerFactory
 			.getLogger(AddDestinationActivity.class);
-	
+
 	private Bitmap picture = null;
 
 	/*
@@ -42,9 +42,9 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		TakePictureActivity.addPhotoListener(this);
-		
+
 		setContentView(R.layout.add_destination);
 
 		EditText lat = (EditText) findViewById(R.id.et_add_lat);
@@ -97,38 +97,35 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 				Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		} else if (v.getId() == R.id.btn_image) {
-			if(picture == null)
-			{
+			if (picture == null) {
 				log.debug("Entering add image event");
 				Intent intent = new Intent(this, TakePictureActivity.class);
 				startActivity(intent);
-			}
-			else
-			{
+			} else {
 				picture = null;
-				ImageView image = (ImageView)findViewById(R.id.img_dest);
+				ImageView image = (ImageView) findViewById(R.id.img_dest);
 
-				Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-				        R.drawable.ic_menu_camera);
+				Bitmap sprite = BitmapFactory.decodeResource(
+						this.getResources(), R.drawable.ic_menu_camera);
 				image.setImageBitmap(sprite);
 
-				Button button = (Button)findViewById(R.id.btn_image);
+				Button button = (Button) findViewById(R.id.btn_image);
 				button.setText(getString(R.string.add_picture));
 			}
 		}
 	}
 
 	public void photoTaken(final PhotoEvent event) {
-		if(event.getFile() != null && event.getFile().exists())
-		{
-			picture = BitmapFactory.decodeFile(event.getFile().getAbsolutePath());
+		if (event.getFile() != null && event.getFile().exists()) {
+			picture = BitmapFactory.decodeFile(event.getFile()
+					.getAbsolutePath());
 			runOnUiThread(new Runnable() {
-				
+
 				public void run() {
-					ImageView image = (ImageView)findViewById(R.id.img_dest);
+					ImageView image = (ImageView) findViewById(R.id.img_dest);
 					image.setImageBitmap(picture);
-					
-					Button button = (Button)findViewById(R.id.btn_image);
+
+					Button button = (Button) findViewById(R.id.btn_image);
 					button.setText(getString(R.string.remove_picture));
 				}
 			});

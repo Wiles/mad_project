@@ -51,7 +51,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 	private Float prevYaw;
 	private double prevBearing;
 	private static final double REDRAW_DIFF = 5.0;
-	
+
 	/**
 	 * Maximum distance from the destination a user is allowed to view and sign
 	 * the log book
@@ -71,12 +71,9 @@ public class Map extends MapActivity implements LocationChangedListener,
 		super.onCreate(savedInstanceState);
 
 		log.debug("Entering map activity");
-		if(Preferences.getBoolean("premium", false))
-		{
+		if (Preferences.getBoolean("premium", false)) {
 			setContentView(R.layout.activity_geo_caching);
-		}
-		else
-		{
+		} else {
 			setContentView(R.layout.activity_geo_caching_ads);
 		}
 
@@ -92,7 +89,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		gps.setLocationManager(lm);
-		
+
 		Compass.getInstance().addChangeListener(this);
 	}
 
@@ -152,20 +149,20 @@ public class Map extends MapActivity implements LocationChangedListener,
 		log.debug("Location changed. Lat: {}, Long: {}",
 				location.getLatitude(), location.getLongitude());
 		mc.setCenter(location.toGeoPoint());
-		
+
 		Preferences.getCurrentUser().setCurrentLocation(location);
-		
+
 		updateDisplay(location, gps.getDestination());
-		
-		double newBearing = event.getLocation().getBearing(gps.getDestination());
-		if(Math.abs(newBearing - prevBearing) > REDRAW_DIFF)
-		{
+
+		double newBearing = event.getLocation()
+				.getBearing(gps.getDestination());
+		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
 			prevBearing = newBearing;
-			ImageView compass = (ImageView)findViewById(R.id.img_direction);
+			ImageView compass = (ImageView) findViewById(R.id.img_direction);
 			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-			        R.drawable.direction_raw);
-			
-			compass.setImageBitmap(rotateImage(sprite, (float)-newBearing));
+					R.drawable.direction_raw);
+
+			compass.setImageBitmap(rotateImage(sprite, (float) -newBearing));
 		}
 	}
 
@@ -196,8 +193,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 			startActivity(intent);
 
 			if (!Preferences.getBoolean("twitter_disabled", false)) {
-				String m = String.format(
-						getString(R.string.tweet),
+				String m = String.format(getString(R.string.tweet),
 						gps.getDestination());
 				new TwitterDialog(this, "http://twitter.com/?status="
 						+ Uri.encode(m)).show();
@@ -217,15 +213,15 @@ public class Map extends MapActivity implements LocationChangedListener,
 		log.debug("Destination changed. Lat: {}, Long: {}", dest.getLatitude(),
 				dest.getLongitude());
 		updateDisplay(gps.getCurrentLocation(), dest);
-		double newBearing = gps.getCurrentLocation().getBearing(event.getDestination());
-		if(Math.abs(newBearing - prevBearing) > REDRAW_DIFF)
-		{
+		double newBearing = gps.getCurrentLocation().getBearing(
+				event.getDestination());
+		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
 			prevBearing = newBearing;
-			ImageView compass = (ImageView)findViewById(R.id.img_direction);
+			ImageView compass = (ImageView) findViewById(R.id.img_direction);
 			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-			        R.drawable.direction_raw);
-			
-			compass.setImageBitmap(rotateImage(sprite, (float)newBearing));
+					R.drawable.direction_raw);
+
+			compass.setImageBitmap(rotateImage(sprite, (float) newBearing));
 		}
 	}
 
@@ -293,41 +289,39 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 	public void compassUpdate(CompassUpdateEvent event) {
 		float newYaw = event.getYaw();
-		if(prevYaw == null || Math.abs(newYaw - prevYaw) > 2.5f)
-		{
+		if (prevYaw == null || Math.abs(newYaw - prevYaw) > 2.5f) {
 			prevYaw = newYaw;
-			ImageView compass = (ImageView)findViewById(R.id.img_compass);
+			ImageView compass = (ImageView) findViewById(R.id.img_compass);
 			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-			        R.drawable.compass_raw);
-			
+					R.drawable.compass_raw);
+
 			compass.setImageBitmap(rotateImage(sprite, -newYaw + prevBearing));
 		}
-		
+
 	}
-	
-	private Bitmap rotateImage(Bitmap image, double degrees)
-	{
+
+	private Bitmap rotateImage(Bitmap image, double degrees) {
 		float orientationCorrection;
 		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-	    Display mDisplay = mWindowManager.getDefaultDisplay();
-	    switch(mDisplay.getOrientation())
-	    {
-	    	case(1):
-	    		orientationCorrection = +90.0f;
-    			break;
-	    	case(3):
-	    		orientationCorrection = -90.0f;
-	    		break;
-	    	default:
-	    		orientationCorrection = 0.0f;
-	    		break;
-	    }
+		Display mDisplay = mWindowManager.getDefaultDisplay();
+		switch (mDisplay.getOrientation()) {
+		case (1):
+			orientationCorrection = +90.0f;
+			break;
+		case (3):
+			orientationCorrection = -90.0f;
+			break;
+		default:
+			orientationCorrection = 0.0f;
+			break;
+		}
 		Matrix rotate = new Matrix();
-		rotate.setRotate((float)(degrees + orientationCorrection), image.getHeight()/2.0f, image.getWidth()/2.0f);
+		rotate.setRotate((float) (degrees + orientationCorrection),
+				image.getHeight() / 2.0f, image.getWidth() / 2.0f);
 
-		Bitmap rSprite = Bitmap.createBitmap(image, 0, 0,
-				image.getWidth(), image.getHeight(), rotate, true);
-		
+		Bitmap rSprite = Bitmap.createBitmap(image, 0, 0, image.getWidth(),
+				image.getHeight(), rotate, true);
+
 		return rSprite;
 	}
 }

@@ -106,9 +106,10 @@ public class Main extends Activity {
 		Parse.initialize(this, "zzPUlt8jvi3xtl6bMFSNe40xS8ieh6h2gBquFbD3",
 				"JqpTHaTBY2im5qxyHAOT0EYgwEFTcSyY1aWvlnaj");
 		log.debug("Parse Initialized");
-		
-		Compass.getInstance().setSensorManager((SensorManager)getSystemService(Context.SENSOR_SERVICE));
-		
+
+		Compass.getInstance().setSensorManager(
+				(SensorManager) getSystemService(Context.SENSOR_SERVICE));
+
 		showSplashScreen();
 	}
 

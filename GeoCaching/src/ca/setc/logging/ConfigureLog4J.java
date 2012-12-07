@@ -19,7 +19,7 @@ public final class ConfigureLog4J {
 	/**
 	 * Creates the inital setup for log4j
 	 */
-	public static void configure() { 
+	public static void configure() {
 		final LogConfigurator logConfigurator = new LogConfigurator();
 
 		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
