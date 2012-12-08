@@ -227,7 +227,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 	 */
 	private void updateDisplay(GeoLocation location, GeoLocation destination) {
 
-		TextView distance = (TextView) findViewById(R.id.distance);
+		TextView distance = (TextView) findViewById(R.id.tv_distance);
 		if (location == null) {
 			distance.setText(getString(R.string.await_gps));
 			showLogBookButtons(false);
@@ -253,7 +253,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 		log.debug("Bearing: {} As Text:{}", gps.getBearing(location), bearing);
 
 		log.debug("Distance: {} As Text: {}", metres, distanceText);
-		distance.setText(distanceText + " " + bearing);
+		distance.setText(distanceText);
 	}
 
 	/**

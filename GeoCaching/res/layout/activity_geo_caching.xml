@@ -40,21 +40,6 @@
         android:text="@string/add_destination"
         android:onClick="onClick"   />
 
-	<TextView
-        android:id="@+id/distance"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/btn_set_dest_screen"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:inputType="none"
-        android:text="" />
-
 	<Button
 	    android:id="@+id/btn_view_logbook"
 	    android:layout_width="wrap_content"
@@ -95,5 +80,15 @@
 	    android:layout_centerVertical="true"
 	    android:contentDescription="@string/Direction"
 	    android:src="@drawable/direction_raw" />
+
+	<TextView
+	    android:id="@+id/tv_distance"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/btn_set_dest_screen"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/select_dest"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:textColor="#FF0000" />
 
 </RelativeLayout>
