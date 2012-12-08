@@ -165,6 +165,7 @@ public class TakePictureActivity extends Activity {
 					parameters.setPictureSize(pictureSize.width,
 							pictureSize.height);
 					parameters.setPictureFormat(ImageFormat.JPEG);
+					parameters.setRotation(90);
 					camera.setParameters(parameters);
 					camera.setDisplayOrientation(90);
 					cameraConfigured = true;

@@ -158,11 +158,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 				.getBearing(gps.getDestination());
 		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
 			prevBearing = newBearing;
-			ImageView compass = (ImageView) findViewById(R.id.img_direction);
-			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-					R.drawable.direction_raw);
-
-			compass.setImageBitmap(rotateImage(sprite, (float) -newBearing));
+			updateImages();
 		}
 	}
 
@@ -217,11 +213,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 				event.getDestination());
 		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
 			prevBearing = newBearing;
-			ImageView compass = (ImageView) findViewById(R.id.img_direction);
-			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-					R.drawable.direction_raw);
-
-			compass.setImageBitmap(rotateImage(sprite, (float) newBearing));
+			updateImages();
 		}
 	}
 
@@ -291,28 +283,26 @@ public class Map extends MapActivity implements LocationChangedListener,
 		float newYaw = event.getYaw();
 		if (prevYaw == null || Math.abs(newYaw - prevYaw) > 2.5f) {
 			prevYaw = newYaw;
-			ImageView compass = (ImageView) findViewById(R.id.img_compass);
-			Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
-					R.drawable.compass_raw);
-
-			compass.setImageBitmap(rotateImage(sprite, -newYaw + prevBearing));
+			updateImages();
 		}
 	}
 
-	private Bitmap rotateImage(Bitmap image, double degrees) {
-		float orientationCorrection;
+	private Bitmap rotateImage(Bitmap image, double degrees, boolean fixOrientation) {
+		float orientationCorrection = 0.0f;
 		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		Display mDisplay = mWindowManager.getDefaultDisplay();
-		switch (mDisplay.getOrientation()) {
-		case (1):
-			orientationCorrection = +90.0f;
-			break;
-		case (3):
-			orientationCorrection = -90.0f;
-			break;
-		default:
-			orientationCorrection = 0.0f;
-			break;
+		if(fixOrientation){
+			switch (mDisplay.getOrientation()) {
+			case (1):
+				orientationCorrection = -90.0f;
+				break;
+			case (3):
+				orientationCorrection = +90.0f;
+				break;
+			default:
+				orientationCorrection = 0.0f;
+				break;
+			}
 		}
 		Matrix rotate = new Matrix();
 		rotate.setRotate((float) (degrees + orientationCorrection),
@@ -322,5 +312,21 @@ public class Map extends MapActivity implements LocationChangedListener,
 				image.getHeight(), rotate, true);
 
 		return rSprite;
+	}
+	
+	private void updateImages()
+	{
+
+		ImageView compass = (ImageView) findViewById(R.id.img_direction);
+		Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
+				R.drawable.direction_raw);
+
+		compass.setImageBitmap(rotateImage(sprite, (float) prevBearing, false));
+
+		compass = (ImageView) findViewById(R.id.img_compass);
+		sprite = BitmapFactory.decodeResource(this.getResources(),
+				R.drawable.compass_raw);
+
+		compass.setImageBitmap(rotateImage(sprite, -prevYaw + prevBearing, true));
 	}
 }
