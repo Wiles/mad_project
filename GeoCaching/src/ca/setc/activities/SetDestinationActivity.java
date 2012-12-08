@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -68,22 +69,6 @@ public class SetDestinationActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return false;
-	}
-
-	/**
-	 * TODO
-	 * 
-	 * @param l
-	 *            the l
-	 * @param v
-	 *            the v
-	 * @param position
-	 *            the position
-	 * @param id
-	 *            the id
-	 */
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		log.info("Destination selected: {}", position);
 	}
 
 	/**
@@ -161,11 +146,20 @@ public class SetDestinationActivity extends Activity {
 	 *            index of item clicked
 	 */
 	private void itemClick(int position) {
-
-		GPS.getInstance().setDestination(
+		GeoLocation loc = 
 				new GeoLocation((ParseGeoPoint) locations.get(position).get(
-						"location")));
-		Preferences.setDestination(locations.get(position));
-		finish();
+						"location"));
+		log.info("Item clicked{}", loc);
+		Intent intent = new Intent(this, ViewDesinationActivity.class);
+		intent.putExtra("locationId", locations.get(position).getObjectId());
+		startActivityForResult(intent, 1);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if (resultCode == RESULT_OK) 
+		{
+			finish();
+		}
 	}
 }

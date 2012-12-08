@@ -62,5 +62,9 @@
     <string name="about">About</string>
     <string name="compass">compass</string>
     <string name="Direction">Direction</string>
+    <string name="title_activity_view_desination">ViewDesinationActivity</string>
+    <string name="creator">Creator:</string>
+    <string name="Date">Date:</string>
+    <string name="Descriptiony">Description:</string>
 
 </resources>

@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:onClick="onClick"
         android:text="@string/create_cache" />
-
+
     <EditText
         android:id="@+id/et_desc"
         android:layout_width="match_parent"
@@ -31,8 +31,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView3"
         android:ems="10"
+        android:gravity="right"
         android:inputType="textMultiLine" />
-
+
     <EditText
         android:id="@+id/et_add_lat"
         android:layout_width="match_parent"
@@ -40,7 +41,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:ems="10"
-        android:hint="@string/Latitude" >
+        android:hint="@string/Latitude"
+        android:maxLines="1" >
 
         <requestFocus />
     </EditText>
@@ -52,7 +54,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/et_add_lat"
         android:text="@string/Longitude" />
-
+
     <EditText
         android:id="@+id/et_add_long"
         android:layout_width="match_parent"
@@ -60,7 +62,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView2"
         android:ems="10"
-        android:hint="@string/Longitude" />
+        android:hint="@string/Longitude"
+        android:minLines="1" />
 
     <TextView
         android:id="@+id/textView3"

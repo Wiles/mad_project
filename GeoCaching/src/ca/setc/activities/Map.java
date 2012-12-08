@@ -54,7 +54,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 	/**
 	 * Maximum distance from the destination a user is allowed to view and sign
-	 * the log book
+	 * the log book in metres.
 	 */
 	private static final double LOGBOOK_RANGE = 2.5;
 

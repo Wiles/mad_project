@@ -82,6 +82,10 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        <activity
+            android:name="ca.setc.activities.ViewDesinationActivity"
+            android:label="@string/title_activity_view_desination" >
+        </activity>
     </application>
 
 </manifest>
