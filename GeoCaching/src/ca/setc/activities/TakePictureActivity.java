@@ -160,13 +160,13 @@ public class TakePictureActivity extends Activity {
 				Camera.Parameters parameters = camera.getParameters();
 				Camera.Size size = getBestPreviewSize(width, height, parameters);
 				Camera.Size pictureSize = getSmallestPictureSize(parameters);
-
 				if (size != null && pictureSize != null) {
 					parameters.setPreviewSize(size.width, size.height);
 					parameters.setPictureSize(pictureSize.width,
 							pictureSize.height);
 					parameters.setPictureFormat(ImageFormat.JPEG);
 					camera.setParameters(parameters);
+					camera.setDisplayOrientation(90);
 					cameraConfigured = true;
 				}
 			}
@@ -186,7 +186,6 @@ public class TakePictureActivity extends Activity {
 
 	SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
 		public void surfaceCreated(SurfaceHolder holder) {
-			// no-op -- wait until surfaceChanged()
 		}
 
 		public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -196,7 +195,6 @@ public class TakePictureActivity extends Activity {
 		}
 
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			// no-op
 		}
 	};
 
