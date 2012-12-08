@@ -1,5 +1,8 @@
 package ca.setc.activities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +23,11 @@ import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.PhotoEvent;
 import ca.setc.geocaching.events.PhotoListener;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 /**
  * Activity to create and share a new Destination
@@ -81,7 +87,8 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 			EditText lat = (EditText) findViewById(R.id.et_add_lat);
 			EditText lng = (EditText) findViewById(R.id.et_add_long);
 
-			ParseObject parse = new ParseObject("Destination");
+			final ParseObject parse = new ParseObject("Destination");
+			ByteArrayOutputStream stream = null;
 			try {
 				parse.put("creator", Preferences.getCurrentUser().toParseUser());
 				parse.put("description", description.getText().toString());
@@ -89,12 +96,44 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 						Double.parseDouble(lat.getText().toString()),
 						Double.parseDouble(lng.getText().toString()));
 				parse.put("location", location);
-				parse.saveEventually();
-				finish();
+				if(picture != null)
+				{
+					stream = new ByteArrayOutputStream();
+					picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
+					byte[] byteArray = stream.toByteArray();
+
+					final ParseFile file = new ParseFile(byteArray);
+					file.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException arg0) {
+							parse.put("image", file);
+							parse.saveEventually();
+						}
+					});
+
+					finish();
+				}
+				else
+				{
+					parse.saveEventually();
+					finish();
+				}
 			} catch (Exception ex) {
 				log.error("Create desination failed: {}", ex.getMessage());
 
 				Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+			}
+			finally
+			{
+				if(stream != null)
+				{
+					try {
+						stream.close();
+					} catch (IOException ignore) {
+						//ignore
+					}
+				}
 			}
 		} else if (v.getId() == R.id.btn_image) {
 			if (picture == null) {

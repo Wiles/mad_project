@@ -297,7 +297,6 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 			compass.setImageBitmap(rotateImage(sprite, -newYaw + prevBearing));
 		}
-
 	}
 
 	private Bitmap rotateImage(Bitmap image, double degrees) {
