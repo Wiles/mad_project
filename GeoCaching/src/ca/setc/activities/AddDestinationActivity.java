@@ -96,15 +96,14 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 						Double.parseDouble(lat.getText().toString()),
 						Double.parseDouble(lng.getText().toString()));
 				parse.put("location", location);
-				if(picture != null)
-				{
+				if (picture != null) {
 					stream = new ByteArrayOutputStream();
 					picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
 					byte[] byteArray = stream.toByteArray();
 
 					final ParseFile file = new ParseFile(byteArray);
 					file.saveInBackground(new SaveCallback() {
-						
+
 						@Override
 						public void done(ParseException arg0) {
 							parse.put("image", file);
@@ -113,9 +112,7 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 					});
 
 					finish();
-				}
-				else
-				{
+				} else {
 					parse.saveEventually();
 					finish();
 				}
@@ -123,15 +120,12 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 				log.error("Create desination failed: {}", ex.getMessage());
 
 				Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-			}
-			finally
-			{
-				if(stream != null)
-				{
+			} finally {
+				if (stream != null) {
 					try {
 						stream.close();
 					} catch (IOException ignore) {
-						//ignore
+						// ignore
 					}
 				}
 			}

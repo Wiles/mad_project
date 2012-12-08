@@ -31,79 +31,79 @@ public class ViewDesinationActivity extends Activity {
 
 	/** The spinner progress. */
 	private ProgressDialog mSpinner;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_desination);
-        
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_view_desination);
+
 		mSpinner = new ProgressDialog(this);
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mSpinner.setMessage(getString(R.string.loading));
 		mSpinner.show();
-        
-        Intent intent = getIntent();
-        ParseQuery query = new ParseQuery("Destination");
-        query.getInBackground(intent.getStringExtra("locationId"), new GetCallback() {
-          public void done(ParseObject object, ParseException e) {
-            if (e == null) {
-        		destination = object;
-        		TextView date = (TextView)findViewById(R.id.tv_date);
-        		TextView description = (TextView)findViewById(R.id.tv_description);
-        		date.setText(destination.getCreatedAt().toString());
-        		description.setText(destination.getString("description"));
-        		ParseFile image = (ParseFile)destination.get("image");
-        		if(image != null)
-        		{
-            		image.getDataInBackground(new GetDataCallback() {
-    					@Override
-    					public void done(byte[] date, ParseException ex) {
-    						if(ex == null)
-    						{
-    							Bitmap bmp = BitmapFactory.decodeByteArray(date, 0, 0);
-    							ImageView iv = (ImageView)findViewById(R.id.img_dest);
-    							iv.setImageBitmap(bmp);
-    						}
 
-    		        		mSpinner.dismiss();
-    					}
-    				});
-        		}
-        		else
-        		{
-	        		mSpinner.dismiss();
-        		}
-            } else {
-    		  mSpinner.dismiss();	
-              Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-              Intent returnIntent = new Intent();
-              setResult(RESULT_CANCELED, returnIntent);        
-              finish();
-            }
-          }
-        });
-    }
+		Intent intent = getIntent();
+		ParseQuery query = new ParseQuery("Destination");
+		query.getInBackground(intent.getStringExtra("locationId"),
+				new GetCallback() {
+					public void done(ParseObject object, ParseException e) {
+						if (e == null) {
+							destination = object;
+							TextView date = (TextView) findViewById(R.id.tv_date);
+							TextView description = (TextView) findViewById(R.id.tv_description);
+							date.setText(destination.getCreatedAt().toString());
+							description.setText(destination
+									.getString("description"));
+							ParseFile image = (ParseFile) destination
+									.get("image");
+							if (image != null) {
+								image.getDataInBackground(new GetDataCallback() {
+									@Override
+									public void done(byte[] date,
+											ParseException ex) {
+										if (ex == null) {
+											Bitmap bmp = BitmapFactory
+													.decodeByteArray(date, 0, 0);
+											ImageView iv = (ImageView) findViewById(R.id.img_dest);
+											iv.setImageBitmap(bmp);
+										}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_view_desination, menu);
-        return true;
-    }
-    
-    public void onClick(View v)
-    {
-    	switch(v.getId()){
-	    	case(R.id.btn_set_view):
-	    		GeoLocation loc = 
-					new GeoLocation((ParseGeoPoint) destination.get(
-							"location"));
-	    		GPS.getInstance().setDestination(loc);
-	    		Preferences.setDestination(destination);
-	    		Intent returnIntent = new Intent();
-				returnIntent.putExtra("result",1);
-				setResult(RESULT_OK,returnIntent);     
-				finish();
-				break;
-    	}
-    }
+										mSpinner.dismiss();
+									}
+								});
+							} else {
+								mSpinner.dismiss();
+							}
+						} else {
+							mSpinner.dismiss();
+							Toast.makeText(getApplicationContext(),
+									e.getMessage(), Toast.LENGTH_SHORT).show();
+							Intent returnIntent = new Intent();
+							setResult(RESULT_CANCELED, returnIntent);
+							finish();
+						}
+					}
+				});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_view_desination, menu);
+		return true;
+	}
+
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case (R.id.btn_set_view):
+			GeoLocation loc = new GeoLocation(
+					(ParseGeoPoint) destination.get("location"));
+			GPS.getInstance().setDestination(loc);
+			Preferences.setDestination(destination);
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra("result", 1);
+			setResult(RESULT_OK, returnIntent);
+			finish();
+			break;
+		}
+	}
 }

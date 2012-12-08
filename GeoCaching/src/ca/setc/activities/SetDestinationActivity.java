@@ -146,19 +146,17 @@ public class SetDestinationActivity extends Activity {
 	 *            index of item clicked
 	 */
 	private void itemClick(int position) {
-		GeoLocation loc = 
-				new GeoLocation((ParseGeoPoint) locations.get(position).get(
-						"location"));
+		GeoLocation loc = new GeoLocation((ParseGeoPoint) locations.get(
+				position).get("location"));
 		log.info("Item clicked{}", loc);
 		Intent intent = new Intent(this, ViewDesinationActivity.class);
 		intent.putExtra("locationId", locations.get(position).getObjectId());
 		startActivityForResult(intent, 1);
 	}
-	
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		if (resultCode == RESULT_OK) 
-		{
+
+		if (resultCode == RESULT_OK) {
 			finish();
 		}
 	}
