@@ -50,7 +50,6 @@ public class Map extends MapActivity implements LocationChangedListener,
 	private MapController mc;
 	private double prevYaw;
 	private double prevBearing;
-	private static final double REDRAW_DIFF = 5.0;
 
 	/**
 	 * Maximum distance from the destination a user is allowed to view and sign
@@ -156,10 +155,9 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 		double newBearing = event.getLocation()
 				.getBearing(gps.getDestination());
-		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
-			prevBearing = newBearing;
-			updateImages();
-		}
+
+		prevBearing = newBearing;
+		updateImages();
 	}
 
 	/**
@@ -211,10 +209,8 @@ public class Map extends MapActivity implements LocationChangedListener,
 		updateDisplay(gps.getCurrentLocation(), dest);
 		double newBearing = gps.getCurrentLocation().getBearing(
 				event.getDestination());
-		if (Math.abs(newBearing - prevBearing) > REDRAW_DIFF) {
-			prevBearing = newBearing;
-			updateImages();
-		}
+		prevBearing = newBearing;
+		updateImages();
 	}
 
 	/**
@@ -281,10 +277,9 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 	public void compassUpdate(CompassUpdateEvent event) {
 		float newYaw = event.getYaw();
-		if (Math.abs(newYaw - prevYaw) > 2.5f) {
-			prevYaw = newYaw;
-			updateImages();
-		}
+
+		prevYaw = newYaw;
+		updateImages();
 	}
 
 	private Bitmap rotateImage(Bitmap image, double degrees, boolean fixOrientation) {
@@ -332,8 +327,9 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 		if(compass != null && sprite != null)
 		{
-			compass.setImageBitmap(rotateImage(sprite, -prevYaw + prevBearing, true));
-			
+			float diff = (float) (prevBearing - prevYaw);
+
+			compass.setImageBitmap(rotateImage(sprite, prevBearing + diff, true));
 		}
 	}
 }

@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:onClick="onClick"
         android:text="@string/create_cache" />
-
+
     <EditText
         android:id="@+id/et_desc"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView3"
         android:ems="10"
-        android:gravity="right"
+        android:gravity="left"
         android:inputType="textMultiLine" />
 
     <EditText
