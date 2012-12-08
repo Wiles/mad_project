@@ -1,5 +1,8 @@
 package ca.setc.activities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,6 +30,9 @@ import com.parse.ParseQuery;
 
 public class ViewDesinationActivity extends Activity {
 
+	/** The log. */
+	private final Logger log = LoggerFactory.getLogger(ViewDesinationActivity.class);
+	
 	private ParseObject destination;
 
 	/** The spinner progress. */
@@ -59,13 +65,17 @@ public class ViewDesinationActivity extends Activity {
 							if (image != null) {
 								image.getDataInBackground(new GetDataCallback() {
 									@Override
-									public void done(byte[] date,
+									public void done(byte[] data,
 											ParseException ex) {
 										if (ex == null) {
 											Bitmap bmp = BitmapFactory
-													.decodeByteArray(date, 0, 0);
+													.decodeByteArray(data, 0, data.length);
 											ImageView iv = (ImageView) findViewById(R.id.img_dest);
 											iv.setImageBitmap(bmp);
+										}
+										else
+										{
+											log.error(ex.getMessage(), ex);
 										}
 
 										mSpinner.dismiss();

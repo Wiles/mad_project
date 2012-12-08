@@ -66,5 +66,6 @@
     <string name="creator">Creator:</string>
     <string name="Date">Date:</string>
     <string name="Descriptiony">Description:</string>
+    <string name="blank"></string>
 
 </resources>

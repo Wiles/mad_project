@@ -41,7 +41,7 @@
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentRight="true"
 	    android:layout_below="@+id/textView2"
-	    android:text="@string/Date"
+	    android:text="@string/blank"
 	    android:textAppearance="?android:attr/textAppearanceLarge" />
 
 	<TextView
@@ -61,7 +61,7 @@
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentRight="true"
 	    android:layout_below="@+id/textView4"
-	    android:text="@string/Descriptiony"
+	    android:text="@string/blank"
 	    android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

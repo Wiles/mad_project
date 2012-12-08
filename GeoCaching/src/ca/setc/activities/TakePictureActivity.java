@@ -211,7 +211,7 @@ public class TakePictureActivity extends Activity {
 		@Override
 		protected String doInBackground(byte[]... jpeg) {
 			File photo = new File(Environment.getExternalStorageDirectory(),
-					".takeahike.bmp");
+					".takeahike.jpg");
 
 			if (photo.exists()) {
 				photo.delete();
