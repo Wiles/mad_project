@@ -48,7 +48,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 	/** The MapController. */
 	private MapController mc;
-	private Float prevYaw;
+	private double prevYaw;
 	private double prevBearing;
 	private static final double REDRAW_DIFF = 5.0;
 
@@ -281,7 +281,7 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 	public void compassUpdate(CompassUpdateEvent event) {
 		float newYaw = event.getYaw();
-		if (prevYaw == null || Math.abs(newYaw - prevYaw) > 2.5f) {
+		if (Math.abs(newYaw - prevYaw) > 2.5f) {
 			prevYaw = newYaw;
 			updateImages();
 		}
@@ -320,13 +320,20 @@ public class Map extends MapActivity implements LocationChangedListener,
 		ImageView compass = (ImageView) findViewById(R.id.img_direction);
 		Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.direction_raw);
-
-		compass.setImageBitmap(rotateImage(sprite, (float) prevBearing, false));
+		if(compass != null && sprite != null)
+		{
+			compass.setImageBitmap(rotateImage(sprite, (float) prevBearing, false));
+			
+		}
 
 		compass = (ImageView) findViewById(R.id.img_compass);
 		sprite = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.compass_raw);
 
-		compass.setImageBitmap(rotateImage(sprite, -prevYaw + prevBearing, true));
+		if(compass != null && sprite != null)
+		{
+			compass.setImageBitmap(rotateImage(sprite, -prevYaw + prevBearing, true));
+			
+		}
 	}
 }
