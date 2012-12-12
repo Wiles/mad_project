@@ -1,4 +1,4 @@
-package ca.setc.geocaching;
+package ca.setc.hardware;
 
 import java.text.DecimalFormat;
 import java.util.LinkedList;
@@ -46,6 +46,9 @@ public final class GPS {
 			"ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W",
 			"WNW", "NW", "NNW", };
 
+	/**
+	 * Constructor
+	 */
 	private GPS() {
 	}
 
@@ -237,7 +240,7 @@ public final class GPS {
 	/**
 	 * Changes distance in metre into formatted text.
 	 * 
-	 * Takes unit prefernece into account.
+	 * Takes unit preference into account.
 	 * 
 	 * Uses ft/m for anything less than 1 kilometre/mile uses kilometre/miles
 	 * for anything at or above that

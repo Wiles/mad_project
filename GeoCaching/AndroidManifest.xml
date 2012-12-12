@@ -79,7 +79,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name="ca.setc.activities.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
         <activity

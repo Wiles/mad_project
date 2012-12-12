@@ -26,6 +26,12 @@ import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.PhotoEvent;
 import ca.setc.geocaching.events.PhotoListener;
 
+/**
+ * Takes a picture
+ * 
+ * Based on source from: https://github.com/commonsguy/cw-advandroid
+ * 
+ */
 public class TakePictureActivity extends Activity {
 
 	/** The log. */
@@ -33,23 +39,32 @@ public class TakePictureActivity extends Activity {
 			.getLogger(TakePictureActivity.class);
 	private static final List<PhotoListener> listeners = new ArrayList<PhotoListener>();
 
-	private SurfaceView preview = null;
 	private SurfaceHolder previewHolder = null;
 	private Camera camera = null;
 	private boolean inPreview = false;
 	private boolean cameraConfigured = false;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_take_picture);
 
-		preview = (SurfaceView) findViewById(R.id.preview);
+		SurfaceView preview = (SurfaceView) findViewById(R.id.preview);
 		previewHolder = preview.getHolder();
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -73,6 +88,11 @@ public class TakePictureActivity extends Activity {
 		startPreview();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onPause()
+	 */
 	@Override
 	public void onPause() {
 		if (inPreview) {
@@ -86,6 +106,11 @@ public class TakePictureActivity extends Activity {
 		super.onPause();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		new MenuInflater(this).inflate(R.menu.options, menu);
@@ -93,13 +118,16 @@ public class TakePictureActivity extends Activity {
 		return (super.onCreateOptionsMenu(menu));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.camera) {
-			if (inPreview) {
-				camera.takePicture(null, null, photoCallback);
-				inPreview = false;
-			}
+		if (item.getItemId() == R.id.camera && inPreview) {
+			camera.takePicture(null, null, photoCallback);
+			inPreview = false;
 		}
 
 		return (super.onOptionsItemSelected(item));
@@ -174,6 +202,12 @@ public class TakePictureActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Add a Photo listener to be notified when a picture is taken
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
 	public static void addPhotoListener(PhotoListener listener) {
 		listeners.add(listener);
 	}
@@ -185,7 +219,7 @@ public class TakePictureActivity extends Activity {
 		}
 	}
 
-	SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
+	private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
 		public void surfaceCreated(SurfaceHolder holder) {
 		}
 
@@ -199,14 +233,23 @@ public class TakePictureActivity extends Activity {
 		}
 	};
 
-	Camera.PictureCallback photoCallback = new Camera.PictureCallback() {
+	private Camera.PictureCallback photoCallback = new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
 			new SavePhotoTask().execute(data);
 			finish();
 		}
 	};
 
+	/**
+	 * Handles saving a picture to external memory
+	 */
 	class SavePhotoTask extends AsyncTask<byte[], String, String> {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
 		protected String doInBackground(byte[]... jpeg) {
 			File photo = new File(Environment.getExternalStorageDirectory(),

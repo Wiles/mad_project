@@ -18,8 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
-import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
+import ca.setc.hardware.GPS;
 import ca.setc.parse.GeoLocation;
 
 import com.parse.FindCallback;
@@ -154,6 +154,12 @@ public class SetDestinationActivity extends Activity {
 		startActivityForResult(intent, 1);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == RESULT_OK) {

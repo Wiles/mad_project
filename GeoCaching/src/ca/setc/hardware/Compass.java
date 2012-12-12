@@ -1,4 +1,4 @@
-package ca.setc.geocaching;
+package ca.setc.hardware;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,16 @@ import android.hardware.SensorManager;
 import ca.setc.geocaching.events.CompassUpdateEvent;
 import ca.setc.geocaching.events.CompassUpdateEventListener;
 
+/**
+ * Wraps android compass implementation. Providing a new reading at most every
+ * 250 milliseconds
+ */
 public final class Compass implements SensorEventListener {
 
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(Compass.class);
+
+	private static final int UPDATE_DELAY = 250;
 
 	private static SensorManager sensorManager;
 	private static Compass instance = new Compass();
@@ -35,14 +41,30 @@ public final class Compass implements SensorEventListener {
 	private Compass() {
 	}
 
+	/**
+	 * Returns an instance of the compass singleton
+	 * 
+	 * @return the compass
+	 */
 	public static Compass getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Adds a listener for compass change events
+	 * 
+	 * @param listener
+	 */
 	public void addChangeListener(CompassUpdateEventListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Sets the Sensor manager being used by the compass
+	 * 
+	 * @param manager
+	 *            of sensors
+	 */
 	public void setSensorManager(SensorManager manager) {
 		if (sensorManager != null) {
 			sensorManager.unregisterListener(this);
@@ -59,13 +81,27 @@ public final class Compass implements SensorEventListener {
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.hardware.SensorEventListener#onAccuracyChanged(android.hardware
+	 * .Sensor, int)
+	 */
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// do nothing
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.hardware.SensorEventListener#onSensorChanged(android.hardware
+	 * .SensorEvent)
+	 */
 	public void onSensorChanged(SensorEvent event) {
 		long diff = DateTime.now().getMillis() - lastUpdate.getMillis();
-		if (diff > 250) {
+		if (diff > UPDATE_DELAY) {
 			lastUpdate = DateTime.now();
 
 			int type = event.sensor.getType();
@@ -78,8 +114,8 @@ public final class Compass implements SensorEventListener {
 				// we should not be here.
 				return;
 			}
-			for (int i = 0; i < 3; i++)
-				data[i] = event.values[i];
+
+			System.arraycopy(event.values, 0, data, 0, data.length);
 
 			SensorManager.getRotationMatrix(mR, mI, accelerometerData,
 					magneticFieldData);

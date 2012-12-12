@@ -21,9 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ca.setc.config.Preferences;
 import ca.setc.dialogs.TwitterDialog;
-import ca.setc.geocaching.AboutActivity;
-import ca.setc.geocaching.Compass;
-import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.CompassUpdateEvent;
 import ca.setc.geocaching.events.CompassUpdateEventListener;
@@ -31,6 +28,8 @@ import ca.setc.geocaching.events.DestinationChangedEvent;
 import ca.setc.geocaching.events.DestinationChangedListener;
 import ca.setc.geocaching.events.LocationChangedEvent;
 import ca.setc.geocaching.events.LocationChangedListener;
+import ca.setc.hardware.Compass;
+import ca.setc.hardware.GPS;
 import ca.setc.parse.GeoLocation;
 
 import com.google.android.maps.MapActivity;
@@ -275,6 +274,13 @@ public class Map extends MapActivity implements LocationChangedListener,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ca.setc.geocaching.events.CompassUpdateEventListener#compassUpdate(ca
+	 * .setc.geocaching.events.CompassUpdateEvent)
+	 */
 	public void compassUpdate(CompassUpdateEvent event) {
 		float newYaw = event.getYaw();
 
@@ -282,11 +288,12 @@ public class Map extends MapActivity implements LocationChangedListener,
 		updateImages();
 	}
 
-	private Bitmap rotateImage(Bitmap image, double degrees, boolean fixOrientation) {
+	private Bitmap rotateImage(Bitmap image, double degrees,
+			boolean fixOrientation) {
 		float orientationCorrection = 0.0f;
 		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		Display mDisplay = mWindowManager.getDefaultDisplay();
-		if(fixOrientation){
+		if (fixOrientation) {
 			switch (mDisplay.getOrientation()) {
 			case (1):
 				orientationCorrection = -90.0f;
@@ -308,25 +315,23 @@ public class Map extends MapActivity implements LocationChangedListener,
 
 		return rSprite;
 	}
-	
-	private void updateImages()
-	{
+
+	private void updateImages() {
 
 		ImageView compass = (ImageView) findViewById(R.id.img_direction);
 		Bitmap sprite = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.direction_raw);
-		if(compass != null && sprite != null)
-		{
-			compass.setImageBitmap(rotateImage(sprite, (float) prevBearing, false));
-			
+		if (compass != null && sprite != null) {
+			compass.setImageBitmap(rotateImage(sprite, (float) prevBearing,
+					false));
+
 		}
 
 		compass = (ImageView) findViewById(R.id.img_compass);
 		sprite = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.compass_raw);
 
-		if(compass != null && sprite != null)
-		{
+		if (compass != null && sprite != null) {
 			float diff = (float) (prevBearing - prevYaw);
 
 			compass.setImageBitmap(rotateImage(sprite, prevBearing + diff, true));

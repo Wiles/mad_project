@@ -18,10 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
-import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
 import ca.setc.geocaching.events.PhotoEvent;
 import ca.setc.geocaching.events.PhotoListener;
+import ca.setc.hardware.GPS;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -148,6 +148,13 @@ public class AddDestinationActivity extends Activity implements PhotoListener {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ca.setc.geocaching.events.PhotoListener#photoTaken(ca.setc.geocaching
+	 * .events.PhotoEvent)
+	 */
 	public void photoTaken(final PhotoEvent event) {
 		if (event.getFile() != null && event.getFile().exists()) {
 			picture = BitmapFactory.decodeFile(event.getFile()

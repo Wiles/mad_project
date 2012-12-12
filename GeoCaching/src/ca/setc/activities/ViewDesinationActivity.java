@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.setc.config.Preferences;
-import ca.setc.geocaching.GPS;
 import ca.setc.geocaching.R;
+import ca.setc.hardware.GPS;
 import ca.setc.parse.GeoLocation;
 
 import com.parse.GetCallback;
@@ -28,16 +28,25 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+/**
+ * View the summary of the destionation and set as the current destination
+ */
 public class ViewDesinationActivity extends Activity {
 
 	/** The log. */
-	private final Logger log = LoggerFactory.getLogger(ViewDesinationActivity.class);
-	
+	private final Logger log = LoggerFactory
+			.getLogger(ViewDesinationActivity.class);
+
 	private ParseObject destination;
 
 	/** The spinner progress. */
 	private ProgressDialog mSpinner;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +61,13 @@ public class ViewDesinationActivity extends Activity {
 		ParseQuery query = new ParseQuery("Destination");
 		query.getInBackground(intent.getStringExtra("locationId"),
 				new GetCallback() {
+
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see com.parse.GetCallback#done(com.parse.ParseObject,
+					 * com.parse.ParseException)
+					 */
 					public void done(ParseObject object, ParseException e) {
 						if (e == null) {
 							destination = object;
@@ -69,12 +85,11 @@ public class ViewDesinationActivity extends Activity {
 											ParseException ex) {
 										if (ex == null) {
 											Bitmap bmp = BitmapFactory
-													.decodeByteArray(data, 0, data.length);
+													.decodeByteArray(data, 0,
+															data.length);
 											ImageView iv = (ImageView) findViewById(R.id.img_dest);
 											iv.setImageBitmap(bmp);
-										}
-										else
-										{
+										} else {
 											log.error(ex.getMessage(), ex);
 										}
 
@@ -96,12 +111,23 @@ public class ViewDesinationActivity extends Activity {
 				});
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_view_desination, menu);
 		return true;
 	}
 
+	/**
+	 * Handles on click events that happen in the view
+	 * 
+	 * @param v
+	 *            view of the click
+	 */
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case (R.id.btn_set_view):
